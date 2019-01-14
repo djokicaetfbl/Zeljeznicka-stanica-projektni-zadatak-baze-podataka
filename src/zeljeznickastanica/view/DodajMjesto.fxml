@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="222.0" prefWidth="370.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.DodajMjestoController">
+   <children>
+      <Label layoutX="36.0" layoutY="38.0" text="Poštanski broj">
+         <font>
+            <Font name="Book Antiqua Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="74.0" text="Naziv">
+         <font>
+            <Font name="Book Antiqua Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="108.0" text="Država">
+         <font>
+            <Font name="Book Antiqua Bold" size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfPostanskiBroj" layoutX="151.0" layoutY="36.0" prefHeight="25.0" prefWidth="171.0" />
+      <TextField fx:id="tfNaziv" layoutX="151.0" layoutY="72.0" prefHeight="25.0" prefWidth="171.0" />
+      <TextField fx:id="tfDrzava" layoutX="151.0" layoutY="106.0" prefHeight="25.0" prefWidth="171.0" promptText="npr.: BA,SRB..." />
+      <Button fx:id="bPotvrdi" layoutX="151.0" layoutY="175.0" mnemonicParsing="false" onAction="#potvrdiUnosMjesta" prefHeight="29.0" prefWidth="82.0" text="Potvrdi">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></Button>
+      <Button fx:id="bOdustani" layoutX="36.0" layoutY="175.0" mnemonicParsing="false" onAction="#odustaniOdUnosaMjesta" prefHeight="29.0" prefWidth="82.0" text="Odustani">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

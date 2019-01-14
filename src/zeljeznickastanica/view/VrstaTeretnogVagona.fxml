@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="393.0" prefWidth="334.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.VrstaTeretnogVagonaController">
+   <children>
+      <VBox layoutX="14.0" layoutY="14.0" prefHeight="165.0" prefWidth="96.0" spacing="10.0">
+         <children>
+            <Button fx:id="bDodaj" mnemonicParsing="false" onAction="#dodajVrstuTeretnogVagona" prefHeight="30.0" prefWidth="75.0" text="Dodaj">
+               <font>
+                  <Font name="Book Antiqua" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="bIzmjeni" mnemonicParsing="false" onAction="#izmjeniVrstuTeretnogVagona" prefHeight="30.0" prefWidth="75.0" text="Izmjeni">
+               <font>
+                  <Font name="Book Antiqua" size="15.0" />
+               </font>
+            </Button>
+            <Button fx:id="bPretrazi" mnemonicParsing="false" onAction="#pretraziVrstuTeretnogVagona" prefHeight="30.0" prefWidth="75.0" text="Pretrazi">
+               <font>
+                  <Font name="Book Antiqua" size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </VBox>
+      <TableView fx:id="vrstaTeretnogVagonaTableView" layoutX="14.0" layoutY="139.0" prefHeight="189.0" prefWidth="298.0" />
+      <Button fx:id="bNazad" layoutX="14.0" layoutY="345.0" mnemonicParsing="false" onAction="#nazadNaGlavnuFormu" prefHeight="29.0" prefWidth="75.0" text="Nazad">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font>
+      </Button>
+      <TextField fx:id="tfPretrazi" layoutX="110.0" layoutY="97.0" promptText="Unesite naziv">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></TextField>
+   </children>
+</AnchorPane>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.ZeljeznickaStanicaController">
+   <children>
+      <HBox layoutX="14.0" layoutY="27.0" prefHeight="235.0" prefWidth="743.0">
+         <children>
+            <VBox prefHeight="229.0" prefWidth="125.0" spacing="20.0">
+               <children>
+                  <Button fx:id="bDodaj" mnemonicParsing="false" onAction="#dodajButton" prefHeight="30.0" prefWidth="75.0" text="Dodaj">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></Button>
+                  <Button fx:id="bIzbrisi" mnemonicParsing="false" onAction="#izbrisiButton" prefHeight="30.0" prefWidth="75.0" text="Izbrisi">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></Button>
+                  <Button fx:id="bIzmjeni" mnemonicParsing="false" onAction="#izmjeniButton" prefHeight="30.0" prefWidth="75.0" text="Izmjeni">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></Button>
+                  <Button fx:id="bPretrazi" lineSpacing="15.0" mnemonicParsing="false" onAction="#pretraziButton" prefHeight="30.0" prefWidth="75.0" text="Pretrazi">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></Button>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" />
+               </padding>
+            </VBox>
+            <VBox prefHeight="205.0" prefWidth="312.0" spacing="52.0">
+               <children>
+                  <ComboBox fx:id="comboBox" onAction="#izaberiIzKomboBoksa" prefWidth="150.0" />
+                  <ComboBox fx:id="cmbTipVagona" onAction="#izaberiTipVagona" prefWidth="150.0" />
+                  <TextField fx:id="tfPretraga" prefHeight="25.0" prefWidth="371.0" promptText="Pretraga">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></TextField>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </HBox>
+      <HBox layoutX="15.0" layoutY="270.0" prefHeight="330.0" prefWidth="770.0">
+         <children>
+            <TableView fx:id="univerzalnaTabelaTableView" prefHeight="320.0" prefWidth="770.0" />
+         </children>
+      </HBox>
+      <MenuBar fx:id="mbMeniBar" layoutY="2.0" prefHeight="25.0" prefWidth="800.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Aplikacija">
+            <items>
+              <MenuItem fx:id="miIzlaz" mnemonicParsing="false" onAction="#izlazIzAplikacije" onMenuValidation="#izlazIzAplikacije2" text="Izlaz" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Sifarnici">
+            <items>
+              <MenuItem fx:id="miMjesta" mnemonicParsing="false" onAction="#mjestaForm" onMenuValidation="#mjestaForm1" text="Mjesta" />
+                  <MenuItem fx:id="miVrsteTeretnihVagona" mnemonicParsing="false" onAction="#vrsteTeretnihVagonaForm" onMenuValidation="#vrsteTeretnihVagonaForm1" text="TeretniVagoni" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Prikaz">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Zaduzenja">
+               <items>
+                  <MenuItem fx:id="miZaduzenjaVozova" mnemonicParsing="false" onAction="#zaduzenjaVozovaForm" onMenuValidation="#zaduzenjaVozovaForm1" text="Voz" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>

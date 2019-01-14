@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="379.0" prefWidth="435.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.DodajPutnickiVagonController">
+   <children>
+      <VBox layoutX="31.0" layoutY="14.0" prefHeight="319.0" prefWidth="197.0" spacing="12.0">
+         <children>
+            <Label text="Putnicki vagon ID">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lBrojMjesta" text="Broj Mjesta">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lLezajZaSpavanje" text="LezajZaSpavanje">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lToalet" text="Toalet">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lBar" text="Bar">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lKlima" text="Klima">
+               <font>
+                  <Font name="Book Antiqua" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lTV" text="TV">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lInternet" text="Internet">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label fx:id="lRestoran" text="Restoran">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox layoutX="261.0" layoutY="14.0" prefHeight="104.0" prefWidth="149.0" spacing="10.0">
+         <children>
+            <TextField fx:id="tfPutnickiVagonID" />
+            <TextField fx:id="tfBrojMjesta" prefHeight="25.0" prefWidth="115.0" />
+         </children>
+      </VBox>
+      <VBox layoutX="261.0" layoutY="81.0" prefHeight="229.0" prefWidth="79.0" spacing="16.0">
+         <children>
+            <CheckBox fx:id="cbLezajZaSpavanje" mnemonicParsing="false" />
+            <CheckBox fx:id="cbToalet" mnemonicParsing="false" />
+            <CheckBox fx:id="cbBar" mnemonicParsing="false" />
+            <CheckBox fx:id="cbKlima" mnemonicParsing="false" />
+            <CheckBox fx:id="cbTV" mnemonicParsing="false" />
+            <CheckBox fx:id="cbInternet" mnemonicParsing="false" />
+            <CheckBox fx:id="cbRestoran" mnemonicParsing="false" />
+         </children>
+      </VBox>
+      <Button fx:id="bOdustani" layoutX="43.0" layoutY="321.0" mnemonicParsing="false" onAction="#odustaniOdUnosaVagona" text="Odustani">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></Button>
+      <Button fx:id="bPotvrdi" layoutX="229.0" layoutY="321.0" mnemonicParsing="false" onAction="#potvrdiUnosVagona" prefHeight="29.0" prefWidth="82.0" text="Potvrdi">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

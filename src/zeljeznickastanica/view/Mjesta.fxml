@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="493.0" prefWidth="458.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.MjestaController">
+   <children>
+      <HBox layoutX="14.0" layoutY="14.0" prefHeight="156.0" prefWidth="444.0">
+         <children>
+            <VBox prefHeight="229.0" prefWidth="125.0" spacing="20.0">
+               <children>
+                  <Button fx:id="bDodaj" mnemonicParsing="false" onAction="#dodajButton" prefHeight="30.0" prefWidth="75.0" text="Dodaj">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></Button>
+                  <Button fx:id="bIzmjeni" mnemonicParsing="false" onAction="#izmjeniButton" prefHeight="30.0" prefWidth="76.0" text="Izmjeni">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></Button>
+                  <Button fx:id="bPretrazi" lineSpacing="15.0" mnemonicParsing="false" onAction="#pretraziButton" prefHeight="30.0" prefWidth="75.0" text="Pretrazi">
+                     <font>
+                        <Font name="Book Antiqua" size="15.0" />
+                     </font></Button>
+               </children>
+               <padding>
+                  <Insets bottom="15.0" left="15.0" right="15.0" />
+               </padding>
+            </VBox>
+            <TextField fx:id="tfPretrazi" prefHeight="25.0" prefWidth="227.0" promptText="Unesite naziv grada ...">
+               <HBox.margin>
+                  <Insets top="100.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="Book Antiqua" size="15.0" />
+               </font>
+            </TextField>
+         </children>
+      </HBox>
+      <TableView fx:id="mjestaTableView" layoutX="26.0" layoutY="170.0" prefHeight="230.0" prefWidth="377.0" />
+      <Button fx:id="bNazad" layoutX="14.0" layoutY="435.0" mnemonicParsing="false" onAction="#nazadNaGlavnuFormu" prefHeight="29.0" prefWidth="75.0" text="Nazad">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

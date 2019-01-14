@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="269.0" prefWidth="422.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.DodajVozController">
+   <children>
+      <VBox layoutX="14.0" layoutY="14.0" prefHeight="97.0" prefWidth="123.0" spacing="15.0">
+         <children>
+            <Label text="Tip ">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Naziv">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Voz ID">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Vrsta pogona">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Sirina kolosjeka">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <VBox layoutX="137.0" layoutY="14.0" prefHeight="134.0" prefWidth="211.0" spacing="10.0">
+         <children>
+            <ComboBox fx:id="cmbTipVoza" prefWidth="150.0" />
+            <TextField fx:id="tfNaziv" />
+            <TextField fx:id="tfVozID" />
+            <TextField fx:id="tfVrstaPogona" />
+            <TextField fx:id="tfSirinaKolosjeka" />
+         </children>
+      </VBox>
+      <Button fx:id="bPotvrdi" layoutX="243.0" layoutY="215.0" mnemonicParsing="false" onAction="#potvrdiUnosVoza" prefHeight="29.0" prefWidth="85.0" text="Potvrdi">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></Button>
+      <Button fx:id="bOdustani" layoutX="44.0" layoutY="215.0" mnemonicParsing="false" onAction="#odustaniOdUnosaVoza" prefHeight="29.0" prefWidth="85.0" text="Odustani">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font></Button>
+   </children>
+</AnchorPane>

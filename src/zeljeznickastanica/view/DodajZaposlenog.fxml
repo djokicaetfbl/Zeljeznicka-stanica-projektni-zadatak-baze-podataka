@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" prefHeight="485.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.DodajZaposlenogController">
+   <children>
+      <VBox layoutX="13.0" layoutY="19.0" prefHeight="350.0" prefWidth="152.0" spacing="24.0">
+         <children>
+            <Label text="Zanimanje">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="JMB">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Ime">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Prezime">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Datum rodjenja">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Adresa">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Broj telefona">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Mjesto">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Plata">
+               <font>
+                  <Font name="Book Antiqua Bold" size="15.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="15.0" top="15.0" />
+         </padding>
+      </VBox>
+      <VBox layoutX="166.0" prefHeight="350.0" prefWidth="228.0" spacing="20.0">
+         <children>
+            <ChoiceBox fx:id="cbZanimanje" prefHeight="25.0" prefWidth="155.0" />
+            <TextField fx:id="tfJMB" promptText="Jedinstveni maticni broj" />
+            <TextField fx:id="tfIme" promptText="Ime" />
+            <TextField fx:id="tfPrezime" promptText="Prezime" />
+            <TextField fx:id="tfDatumRodjenja" />
+            <TextField fx:id="tfAdresa" promptText="Adresa" />
+            <TextField fx:id="tfbrojTelefona" promptText="Broj telefona" />
+            <ComboBox fx:id="cbMjesta" prefWidth="150.0" />
+            <TextField fx:id="tfPlata" promptText="Plata" />
+         </children>
+         <padding>
+            <Insets top="15.0" />
+         </padding>
+      </VBox>
+      <Button fx:id="bPotvrdi" layoutX="252.0" layoutY="438.0" mnemonicParsing="false" onAction="#potvrdiUnosZaposlenogButton" prefHeight="29.0" prefWidth="89.0" text="Potvrdi">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="bOdustani" layoutX="45.0" layoutY="436.0" mnemonicParsing="false" onAction="#odustaniOdUnosaZaposlenogButton" prefHeight="19.0" prefWidth="89.0" text="Odustani">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
