@@ -11,9 +11,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
@@ -28,6 +31,8 @@ import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.ConnectionPool;
 import zeljeznickastanica.model.dao.TeretniVagonDAO;
 import zeljeznickastanica.model.dto.TeretniVagon;
+import zeljeznickastanica.model.dto.Vagon;
+import zeljeznickastanica.model.dto.Voz;
 
 /**
  * FXML Controller class
@@ -74,9 +79,45 @@ public class DodajTeretniVagonController implements Initializable {
                 && !tfUkupnaVisina.getText().isEmpty() && !tfProsVlastitaMasa.getText().isEmpty() && !tfNosivost.getText().isEmpty()
                 && !tfPovrsinaUnutrasnjosti.getText().isEmpty() && !tfZapreminaUnutrasnjosti.getText().isEmpty()) {
 
+            if (ZeljeznickaStanicaController.booleanDodajTeretniVagon && provjeriTeretniVagonIDUBaz(tfTeretniVagonID.getText())) {
+                upozorenjeIDVecPostojiUBazi();
+                return;
+            }
+
+            if (tfTeretniVagonID.getText().length() > 20) {
+                upozorenjeDuzinaVozID();
+                return;
+            }
+
+            String decimalRegex = "^[0-9]+([,.][0-9][0-9]?)?$";
+            Pattern pattern = Pattern.compile(decimalRegex);
+            if (!pattern.matcher(tfDuzPrekoOdbojnika.getText()).matches() || Double.parseDouble(tfDuzPrekoOdbojnika.getText()) < 0) {
+                upozorenjeNekorektanUnos();
+                return;
+            }
+            if (!pattern.matcher(tfUkupnaVisina.getText()).matches() || Double.parseDouble(tfUkupnaVisina.getText()) < 0) {
+                upozorenjeNekorektanUnos();
+                return;
+            }
+            if (!pattern.matcher(tfProsVlastitaMasa.getText()).matches() || Double.parseDouble(tfProsVlastitaMasa.getText()) < 0) {
+                upozorenjeNekorektanUnos();
+                return;
+            }
+            if (!pattern.matcher(tfNosivost.getText()).matches() || Double.parseDouble(tfNosivost.getText()) < 0) {
+                upozorenjeNekorektanUnos();
+                return;
+            }
+            if (!pattern.matcher(tfPovrsinaUnutrasnjosti.getText()).matches() || Double.parseDouble(tfPovrsinaUnutrasnjosti.getText()) < 0) {
+                upozorenjeNekorektanUnos();
+                return;
+            }
+            if (!pattern.matcher(tfZapreminaUnutrasnjosti.getText()).matches() || Double.parseDouble(tfZapreminaUnutrasnjosti.getText()) < 0) {
+                upozorenjeNekorektanUnos();
+                return;
+            }
+
             TeretniVagon teretniVagon = new TeretniVagon();
             if (!ZeljeznickaStanicaController.booleanDodajTeretniVagon) {
-                System.out.println("IZMJENA");
                 teretniVagon = (TeretniVagon) ZeljeznickaStanicaController.izabraniTeretniVagon;
             }
             teretniVagon.setVagonId(tfTeretniVagonID.getText());
@@ -96,9 +137,51 @@ public class DodajTeretniVagonController implements Initializable {
             }
 
         } else {
-            // upozorenjePoljaSuPrazna();
+            upozorenjePoljaSuPrazna();
         }
 
+    }
+
+    private void upozorenjePoljaSuPrazna() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Provjerite polja za unos podataka.");
+        alert.showAndWait();
+    }
+
+    private void upozorenjeNekorektanUnos() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Nekorektan unos vrijednosti!");
+        alert.showAndWait();
+    }
+
+    private void upozorenjeDuzinaVozID() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Predugacak unos !");
+        alert.showAndWait();
+    }
+
+    private void upozorenjeIDVecPostojiUBazi() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Voz id vec postoji u bazi!");
+        alert.showAndWait();
+    }
+
+    private boolean provjeriTeretniVagonIDUBaz(String vozid) {
+        final String zaPoredjenje = vozid;
+        Optional<Vagon> tvOptional = ZeljeznickaStanicaController.vagoniTeretniObservableList.stream().filter(e -> e.getVagonId().equals(zaPoredjenje)).findFirst();
+
+        if (tvOptional.isPresent()) {
+            return true;
+        }
+        return false;
     }
 
     private void ubaciUCMBTipTeretnogVagona() {

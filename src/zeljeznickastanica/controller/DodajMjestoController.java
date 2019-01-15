@@ -7,9 +7,11 @@ package zeljeznickastanica.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.MjestoDAO;
 import zeljeznickastanica.model.dto.Mjesto;
+import zeljeznickastanica.model.dto.Voz;
 
 /**
  * FXML Controller class
@@ -51,11 +54,34 @@ public class DodajMjestoController implements Initializable {
 
     private void unesiMjesto() {
         if (!tfPostanskiBroj.getText().isEmpty() && !tfNaziv.getText().isEmpty() && !tfDrzava.getText().isEmpty()) {
+            String postanskiBrojRegex = "\\d+";
+            Pattern pattern = Pattern.compile(postanskiBrojRegex);
+            if (!pattern.matcher(tfPostanskiBroj.getText()).matches() || tfPostanskiBroj.getText().length() > 20) {
+                upozorenjeNeispravanPostanskiBroj();
+                return;
+            }
+
+            if (MjestaController.booleanDodaj && provjeriMjestoIDUBazi(Integer.parseInt(tfPostanskiBroj.getText()))) {
+                upozorenjeMjestoID();
+                return;
+            }
+
+            String slovaRegex = "[a-z A-Z]+";
+            pattern = Pattern.compile(slovaRegex);
+
+            if (!pattern.matcher(tfNaziv.getText()).matches() || tfNaziv.getText().length() > 20) {
+                upozorenjeNeispravanUnos();
+                return;
+            }
+
+            if (!pattern.matcher(tfNaziv.getText()).matches() || tfDrzava.getText().length() > 20) {
+                upozorenjeNeispravanUnos();
+                return;
+            }
 
             Mjesto mjesto = new Mjesto();
 
             Integer postanskiBroj = Integer.parseInt(tfPostanskiBroj.getText());
-            System.out.println("POSTANSKI BROJ: " + postanskiBroj);
             if (!MjestaController.booleanDodaj) {
                 System.out.println("usaoo");
                 mjesto = MjestaController.izabranoMjesto;
@@ -74,8 +100,40 @@ public class DodajMjestoController implements Initializable {
             upozorenjePoljaSuPrazna();
         }
     }
-    
-    
+
+    private void upozorenjeMjestoID() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Postanski broj vec postoji u bazi!");
+        alert.showAndWait();
+    }
+
+    private void upozorenjeNeispravanUnos() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Neispravan unos!.");
+        alert.showAndWait();
+    }
+
+    private void upozorenjeNeispravanPostanskiBroj() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Provjerite postanski broj.");
+        alert.showAndWait();
+    }
+
+    private boolean provjeriMjestoIDUBazi(Integer postanskiBroj) {
+        final int zaPoredjenje = postanskiBroj;
+        for (Mjesto m : MjestaController.mjestaObservaleList) {
+            if (m.getPostanskiBroj() == postanskiBroj) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void upozorenjePoljaSuPrazna() {
         Alert alert = new Alert(Alert.AlertType.ERROR);

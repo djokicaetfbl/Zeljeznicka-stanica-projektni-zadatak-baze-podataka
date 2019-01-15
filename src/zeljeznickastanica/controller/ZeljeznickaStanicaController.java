@@ -108,18 +108,20 @@ public class ZeljeznickaStanicaController implements Initializable {
 
     @FXML
     private MenuItem miMjesta;
-    @FXML
-    private MenuItem miZaduzenjaVozova;
     // @FXML
     //private TableColumn<Zaposleni,LocalDate> datumRodjenjaColumn; -> bice datumRodjenja.getValue() da se dobije vrijednost
     public static boolean booleanDodaj = false, booleanDodajVoz = false;
 
     public static ObservableList<Zaposleni> zaposleniObservaleList = FXCollections.observableArrayList();
 
+    @FXML
+    private MenuItem miRadnici;
     public static Zaposleni izabraniZaposleni, zaposleniIzPretrage;
 
     public static Voz izabraniVoz;
     public static Lokomotiva lokomotivaIzPretrage;
+    @FXML
+    private MenuItem miZaduzenjaVozova;
     public static Masina masinaIzPretrage;
     public static PutnickiVagon putnickiVagonIzPretrage;
     public static TeretniVagon teretniVagonIzPretrage;
@@ -297,7 +299,7 @@ public class ZeljeznickaStanicaController implements Initializable {
             //if (!booleanDodaj) {
             //    ZaposleniDAO.izbrisiZaposlenogIzBaze((Zaposleni) izabranaVrsta.get(0));
             //} else {
-                ZaposleniDAO.izbrisiZaposlenog((Zaposleni) izabranaVrsta.get(0));
+            ZaposleniDAO.izbrisiZaposlenog((Zaposleni) izabranaVrsta.get(0));
             //}
             zaposleniObservaleList.removeAll(izabranaVrsta);
         } else if (comboBox.getSelectionModel().getSelectedItem().equals("Voz")) {
@@ -353,18 +355,19 @@ public class ZeljeznickaStanicaController implements Initializable {
             vozoviObservaleList = univerzalnaTabelaTableView.getItems();
             izabranaVrsta = univerzalnaTabelaTableView.getSelectionModel().getSelectedItems();
             izabraniVoz = (Voz) izabranaVrsta.get(0);
+            System.out.println("IZABRANI VOZ : "+izabraniVoz);
             if (izabraniVoz != null) {
                 Parent dodajVozView;
-                try {
-                    dodajVozView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/DodajVoz.fxml"));
+            try {
+                dodajVozView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/DodajVoz.fxml"));
 
-                    Scene dodajMjestoScene = new Scene(dodajVozView);
-                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    window.setScene(dodajMjestoScene);
-                    window.show();
-                } catch (IOException ex) {
-                    Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                Scene dodajVozScene = new Scene(dodajVozView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(dodajVozScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 booleanDodajVoz = false;
             } else {
                 upozorenjeComboBox(); // treba staviti upozorenje niste izabrali nista
@@ -622,7 +625,6 @@ public class ZeljeznickaStanicaController implements Initializable {
         univerzalnaTabelaTableView.getColumns().addAll(vozNazivColumn, vozIdColumn, vrstaPogonaColumn, namjenaColumn, sirinaKolosjeka);
 
     }
-    
 
     public void tabelaVozova(ObservableList vozovi) {
         univerzalnaTabelaTableView.setItems(vozovi);
@@ -673,22 +675,22 @@ public class ZeljeznickaStanicaController implements Initializable {
         tipColumn = new TableColumn("Tip");
         tipColumn.setCellValueFactory(new PropertyValueFactory<>("tipTeretnogVagona"));
 
-        duzinaPrekoOdbojnikaColumn = new TableColumn("Duz. prek. odbojnika");
+        duzinaPrekoOdbojnikaColumn = new TableColumn("Duz. prek. odbojnika [mm]");
         duzinaPrekoOdbojnikaColumn.setCellValueFactory(new PropertyValueFactory<>("duzinaPrekoOdbojnika"));
 
-        ukupnaVisinaColumn = new TableColumn("Visina");
+        ukupnaVisinaColumn = new TableColumn("Visina [mm]");
         ukupnaVisinaColumn.setCellValueFactory(new PropertyValueFactory<>("ukupnaVisina"));
 
-        prosjecnaVlastitaMasaColumn = new TableColumn("Pros. vlastita masa");
+        prosjecnaVlastitaMasaColumn = new TableColumn("Pros. vlastita masa [t]");
         prosjecnaVlastitaMasaColumn.setCellValueFactory(new PropertyValueFactory<>("prosjecnaVlastitaMasa"));
 
-        nosivostVagonaColumn = new TableColumn("Nosivost");
+        nosivostVagonaColumn = new TableColumn("Nosivost [t]");
         nosivostVagonaColumn.setCellValueFactory(new PropertyValueFactory<>("nosivostVagona"));
 
-        povrsinaUnutrasnjostiColumn = new TableColumn("Povr. unutrasnjosti");
+        povrsinaUnutrasnjostiColumn = new TableColumn("Povr. unutrasnjosti [m2]");
         povrsinaUnutrasnjostiColumn.setCellValueFactory(new PropertyValueFactory<>("povrsinaUnutrasnjosti"));
 
-        zapreminaUnutrasnjostiColumn = new TableColumn("Zapr. unutrasnjosti");
+        zapreminaUnutrasnjostiColumn = new TableColumn("Zapr. unutrasnjosti [m3]");
         zapreminaUnutrasnjostiColumn.setCellValueFactory(new PropertyValueFactory<>("zapreminaUnutrasnjosti"));
 
         univerzalnaTabelaTableView.getColumns().addAll(vagonIdColumn, tipColumn, duzinaPrekoOdbojnikaColumn, ukupnaVisinaColumn, prosjecnaVlastitaMasaColumn, nosivostVagonaColumn, povrsinaUnutrasnjostiColumn, zapreminaUnutrasnjostiColumn);
@@ -761,6 +763,29 @@ public class ZeljeznickaStanicaController implements Initializable {
 
     @FXML
     void zaduzenjaVozovaForm1(ActionEvent event) {
+
+    }
+
+    @FXML
+    void prikazRadnikaForm(ActionEvent event) {
+
+        Parent vrsteTVView;
+        try {
+            vrsteTVView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/PrikazRadnika.fxml"));
+
+            Scene vrsteTVScene = new Scene(vrsteTVView);
+            Stage window = (Stage) mbMeniBar.getScene().getWindow();
+            window.setScene(vrsteTVScene);
+            window.show();
+
+        } catch (IOException ex) {
+            Logger.getLogger(ZeljeznickaStanicaController.class
+                    .getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    void prikazRadnikaForm1(ActionEvent event) {
 
     }
 

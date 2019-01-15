@@ -70,11 +70,11 @@
             <TextField fx:id="tfJMB" promptText="Jedinstveni maticni broj" />
             <TextField fx:id="tfIme" promptText="Ime" />
             <TextField fx:id="tfPrezime" promptText="Prezime" />
-            <TextField fx:id="tfDatumRodjenja" />
+            <TextField fx:id="tfDatumRodjenja" promptText="godina-mjesec-dan" />
             <TextField fx:id="tfAdresa" promptText="Adresa" />
-            <TextField fx:id="tfbrojTelefona" promptText="Broj telefona" />
+            <TextField fx:id="tfbrojTelefona" promptText="npr. 065658745" />
             <ComboBox fx:id="cbMjesta" prefWidth="150.0" />
-            <TextField fx:id="tfPlata" promptText="Plata" />
+            <TextField fx:id="tfPlata" promptText="npr. 1200.00" />
          </children>
          <padding>
             <Insets top="15.0" />

@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.DodajTeretniVagonController">
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="584.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.DodajTeretniVagonController">
    <children>
       <VBox layoutX="14.0" layoutY="14.0" prefHeight="296.0" prefWidth="212.0" spacing="17.0">
          <children>
@@ -58,12 +58,12 @@
          <children>
             <TextField fx:id="tfTeretniVagonID" />
             <ComboBox fx:id="cmbTipTeretnogVagona" prefWidth="150.0" />
-            <TextField fx:id="tfDuzPrekoOdbojnika" />
-            <TextField fx:id="tfUkupnaVisina" />
-            <TextField fx:id="tfProsVlastitaMasa" />
-            <TextField fx:id="tfNosivost" />
-            <TextField fx:id="tfPovrsinaUnutrasnjosti" />
-            <TextField fx:id="tfZapreminaUnutrasnjosti" />
+            <TextField fx:id="tfDuzPrekoOdbojnika" promptText="npr. 14040" />
+            <TextField fx:id="tfUkupnaVisina" promptText="npr. 3390" />
+            <TextField fx:id="tfProsVlastitaMasa" promptText="npr. 22" />
+            <TextField fx:id="tfNosivost" promptText="npr. 58" />
+            <TextField fx:id="tfPovrsinaUnutrasnjosti" promptText="npr. 35.5" />
+            <TextField fx:id="tfZapreminaUnutrasnjosti" promptText="npr. 72" />
          </children>
       </VBox>
       <Button fx:id="bOdustani" layoutX="68.0" layoutY="348.0" mnemonicParsing="false" onAction="#odustaniOdUnosaVagona" text="Odustani">
@@ -76,5 +76,6 @@
             <Font name="Book Antiqua" size="15.0" />
          </font>
       </Button>
+      <Label layoutX="574.0" layoutY="155.0" />
    </children>
 </AnchorPane>

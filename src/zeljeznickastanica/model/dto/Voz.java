@@ -19,17 +19,19 @@ public class Voz {
     private Double sirinaKolosjeka;
     protected String tipVoza;
     private String naziv;
+    private boolean status = true;
 
     public Voz() {
 
     }
 
-    public Voz(String vozId, String vrstaPogona, String namjena, Double sirinaKolosjeka,String naziv) {
+    public Voz(String vozId, String vrstaPogona, String namjena, Double sirinaKolosjeka,String naziv,boolean status) {
         this.vozId = vozId;
         this.vrstaPogona = vrstaPogona;
         this.namjena = namjena;
         this.sirinaKolosjeka = sirinaKolosjeka;
         this.naziv = naziv;
+        this.status = status;
     }
     
 

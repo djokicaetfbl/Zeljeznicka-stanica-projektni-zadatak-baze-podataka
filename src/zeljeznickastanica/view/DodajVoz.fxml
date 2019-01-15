@@ -42,10 +42,10 @@
       <VBox layoutX="137.0" layoutY="14.0" prefHeight="134.0" prefWidth="211.0" spacing="10.0">
          <children>
             <ComboBox fx:id="cmbTipVoza" prefWidth="150.0" />
-            <TextField fx:id="tfNaziv" />
-            <TextField fx:id="tfVozID" />
-            <TextField fx:id="tfVrstaPogona" />
-            <TextField fx:id="tfSirinaKolosjeka" />
+            <TextField fx:id="tfNaziv" promptText="Naziv" />
+            <TextField fx:id="tfVozID" promptText="Voz Id" />
+            <ComboBox fx:id="cmbVrstaPogona" prefWidth="150.0" />
+            <TextField fx:id="tfSirinaKolosjeka" promptText="npr . 1435.00" />
          </children>
       </VBox>
       <Button fx:id="bPotvrdi" layoutX="243.0" layoutY="215.0" mnemonicParsing="false" onAction="#potvrdiUnosVoza" prefHeight="29.0" prefWidth="85.0" text="Potvrdi">

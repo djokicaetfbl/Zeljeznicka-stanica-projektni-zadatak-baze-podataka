@@ -20,8 +20,8 @@ public class Lokomotiva extends Voz {
         super();
     }
 
-    public Lokomotiva(String vozId, String vrstaPogona, String namjena, Double sirinaKolosjeka,String naziv) {
-        super(vozId, vrstaPogona, namjena, sirinaKolosjeka,naziv);
+    public Lokomotiva(String vozId, String vrstaPogona, String namjena, Double sirinaKolosjeka,String naziv,boolean status) {
+        super(vozId, vrstaPogona, namjena, sirinaKolosjeka,naziv,status);
         this.tipVoza = "Lokomotiva";
     }
 

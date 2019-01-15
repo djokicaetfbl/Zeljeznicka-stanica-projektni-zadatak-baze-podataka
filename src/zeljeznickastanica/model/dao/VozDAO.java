@@ -36,7 +36,7 @@ public class VozDAO {
             while (rs.next()) {
 
                 voz = new Voz(rs.getString("vozid"), rs.getString("vrstapogona"),
-                        rs.getString("namjena"), rs.getDouble("sirinakolosjeka"), rs.getString("naziv"));
+                        rs.getString("namjena"), rs.getDouble("sirinakolosjeka"), rs.getString("naziv"),rs.getBoolean("status"));
                 if (!ZeljeznickaStanicaController.vozoviObservaleList.contains(voz)) {
                     ZeljeznickaStanicaController.vozoviObservaleList.add(voz);
                 }
@@ -64,7 +64,8 @@ public class VozDAO {
 
         try {
             connection = ConnectionPool.getInstance().checkOut();
-            String query = "delete from voz  where vozid = ?";
+           // String query = "update zaposleni set Aktivan = false where JMB = ?";
+            String query = "update voz set status = true where vozid = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, voz.getVozId());
             preparedStatement.execute();

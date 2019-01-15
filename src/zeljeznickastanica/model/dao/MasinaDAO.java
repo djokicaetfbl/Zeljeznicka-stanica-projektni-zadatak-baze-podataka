@@ -33,7 +33,7 @@ public class MasinaDAO {
             rs = statement.executeQuery("select * from masina_info");
             while (rs.next()) {
                 masina = new Masina(rs.getString("vozid"), rs.getString("vrstapogona"),
-                        rs.getString("namjena"), rs.getDouble("sirinakolosjeka"), rs.getString("naziv"));
+                        rs.getString("namjena"), rs.getDouble("sirinakolosjeka"), rs.getString("naziv"),rs.getBoolean("status"));
                 if (!ZeljeznickaStanicaController.vozoviObservaleList.contains(masina)) {
                     ZeljeznickaStanicaController.vozoviObservaleList.add(masina);
                 }
@@ -128,7 +128,7 @@ public class MasinaDAO {
             rs = callableStatement.executeQuery();
             if (rs.next()) {
                 return new Masina(rs.getString("vozid"), rs.getString("vrstapogona"), rs.getString("namjena"),
-                        rs.getDouble("sirinakolosjeka"), rs.getString("naziv"));
+                        rs.getDouble("sirinakolosjeka"), rs.getString("naziv"),true);
             }
 
         } catch (SQLException ex) {

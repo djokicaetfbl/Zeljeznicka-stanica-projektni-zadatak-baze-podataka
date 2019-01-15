@@ -7,9 +7,11 @@ package zeljeznickastanica.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -25,6 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.PutnickiVagonDAO;
 import zeljeznickastanica.model.dto.PutnickiVagon;
+import zeljeznickastanica.model.dto.Vagon;
 
 /**
  * FXML Controller class
@@ -32,7 +36,7 @@ import zeljeznickastanica.model.dto.PutnickiVagon;
  * @author djord
  */
 public class DodajPutnickiVagonController implements Initializable {
-    
+
     @FXML
     private Label lVrstaTeretnogVagona;
     @FXML
@@ -51,7 +55,7 @@ public class DodajPutnickiVagonController implements Initializable {
     private Label lRestoran;
     @FXML
     private Label lBar;
-    
+
     @FXML
     private ComboBox<String> cmbTipVagona;
     @FXML
@@ -76,12 +80,12 @@ public class DodajPutnickiVagonController implements Initializable {
     private TextField tfPutnickiVagonID;
     @FXML
     private Button bOdustani;
-    
+
     @FXML
     private Button bPotvrdi;
-    
+
     private PutnickiVagon putnickiVagon;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (!ZeljeznickaStanicaController.booleanDodajPutnickiVagon) {
@@ -99,58 +103,26 @@ public class DodajPutnickiVagonController implements Initializable {
         }
     }
 
-    /*   @FXML
-     void izaberiIzKomboBoksa(ActionEvent event) {
-     if (cmbTipVagona.getValue().toString().equals("Teretni vagon")) {
-     lVrstaTeretnogVagona.setVisible(true);
-     cmbVrstaTeretnogVagona.setVisible(true);
-
-     lBrojMjesta.setVisible(false);
-     lLezajZaSpavanje.setVisible(false);
-     lToalet.setVisible(false);
-     lKlima.setVisible(false);
-     lTV.setVisible(false);
-     lInternet.setVisible(false);
-     lRestoran.setVisible(false);
-     lBar.setVisible(false);
-
-     cbLezajZaSpavanje.setVisible(false);
-     cbToalet.setVisible(false);
-     cbBar.setVisible(false);
-     cbKlima.setVisible(false);
-     cbTV.setVisible(false);
-     cbInternet.setVisible(false);
-     cbRestoran.setVisible(false);
-
-     tfBrojMjesta.setVisible(false);
-     } else if (cmbTipVagona.getValue().toString().equals("Putnicki vagon")) {
-
-     lVrstaTeretnogVagona.setVisible(false);
-     cmbVrstaTeretnogVagona.setVisible(false);
-
-     lBrojMjesta.setVisible(true);
-     lLezajZaSpavanje.setVisible(true);
-     lToalet.setVisible(true);
-     lKlima.setVisible(true);
-     lTV.setVisible(true);
-     lInternet.setVisible(true);
-     lRestoran.setVisible(true);
-     lBar.setVisible(true);
-
-     cbLezajZaSpavanje.setVisible(true);
-     cbToalet.setVisible(true);
-     cbBar.setVisible(true);
-     cbKlima.setVisible(true);
-     cbTV.setVisible(true);
-     cbInternet.setVisible(true);
-     cbRestoran.setVisible(true);
-
-     tfBrojMjesta.setVisible(true);
-     }
-     } */
     public void unesiVagon() {
         if (!tfBrojMjesta.getText().isEmpty() && !tfPutnickiVagonID.getText().isEmpty()) {
-            
+
+            if (ZeljeznickaStanicaController.booleanDodajPutnickiVagon && provjeriPutnickiVagonIDUBaz(tfPutnickiVagonID.getText())) {
+                upozorenjeIDVecPostojiUBazi();
+                return;
+            }
+
+            if (tfPutnickiVagonID.getText().length() > 20) {
+                upozorenjeDuzinaVozID();
+                return;
+            }
+            String brojMjestaRegex = "\\d+";
+            Pattern pattern = Pattern.compile(brojMjestaRegex);
+
+            if (!pattern.matcher(tfBrojMjesta.getText()).matches() || Integer.parseInt(tfBrojMjesta.getText()) < 0) {
+                upozorenjeNekorektanUnos();
+                return;
+            }
+
             PutnickiVagon putnickiVagon = new PutnickiVagon();
             Integer brojMjesta = Integer.parseInt(tfBrojMjesta.getText());
             if (!ZeljeznickaStanicaController.booleanDodajPutnickiVagon) {
@@ -172,36 +144,36 @@ public class DodajPutnickiVagonController implements Initializable {
                 PutnickiVagonDAO.izmjeniPutnickiVagon(putnickiVagon);
                 ZeljeznickaStanicaController.booleanDodajPutnickiVagon = false;
             }
-            
+
         } else {
-            // upozorenjePoljaSuPrazna();
+            upozorenjePoljaSuPrazna();
         }
-        
+
     }
-    
+
     @FXML
     void odustaniOdUnosaVagona(ActionEvent event) {
         Parent zeljeznickaStanicaView;
         try {
             zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
-            
+
             Scene mjestoScene = new Scene(zeljeznickaStanicaView);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(mjestoScene);
             window.show();
-            
+
         } catch (IOException ex) {
             Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     void potvrdiUnosVagona(ActionEvent event) {
         unesiVagon();
         Parent zeljeznickaStanicaView;
         try {
             zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
-            
+
             Scene zeljeznickaStanicaScene = new Scene(zeljeznickaStanicaView);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(zeljeznickaStanicaScene);
@@ -210,5 +182,47 @@ public class DodajPutnickiVagonController implements Initializable {
             Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    private void upozorenjeDuzinaVozID() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Predugacak unos !");
+        alert.showAndWait();
+    }
+
+    private void upozorenjePoljaSuPrazna() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Provjerite polja za unos podataka.");
+        alert.showAndWait();
+    }
+
+    private void upozorenjeNekorektanUnos() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Nekorektan unos vrijednosti!");
+        alert.showAndWait();
+    }
+
+    private boolean provjeriPutnickiVagonIDUBaz(String vozid) {
+        final String zaPoredjenje = vozid;
+        Optional<Vagon> tvOptional = ZeljeznickaStanicaController.vagoniPutnickiObservableList.stream().filter(e -> e.getVagonId().equals(zaPoredjenje)).findFirst();
+
+        if (tvOptional.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    private void upozorenjeIDVecPostojiUBazi() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Voz id vec postoji u bazi!");
+        alert.showAndWait();
+    }
+
 }

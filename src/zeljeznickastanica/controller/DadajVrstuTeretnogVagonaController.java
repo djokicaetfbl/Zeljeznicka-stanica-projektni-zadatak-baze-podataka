@@ -7,6 +7,7 @@ package zeljeznickastanica.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,6 +24,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.VrstaTeretnogVagonaDAO;
 import zeljeznickastanica.model.dto.Mjesto;
+import zeljeznickastanica.model.dto.Voz;
 import zeljeznickastanica.model.dto.VrstaTeretnogVagona;
 
 /**
@@ -31,28 +33,42 @@ import zeljeznickastanica.model.dto.VrstaTeretnogVagona;
  * @author djord
  */
 public class DadajVrstuTeretnogVagonaController implements Initializable {
-    
+
     @FXML
     private TextField tfVrstaId;
-    
+
     @FXML
     private TextField tfNaziv;
-    
+
     @FXML
     private Button bOdustani;
-    
+
     @FXML
     private Button bPotvrdi;
-    
+
     private VrstaTeretnogVagona vtv;
-    
+
     private void unesiVTV() {
         if (!tfVrstaId.getText().isEmpty() && !tfNaziv.getText().isEmpty()) {
-            
+
+            if (VrstaTeretnogVagonaController.booleanDodajVTV && provjeriVTVIDUBazi(tfVrstaId.getText())) {
+                upozorenjeVTVID();
+                return;
+            }
+
+            if (tfVrstaId.getText().length() > 20) {
+                upozorenjePredugacakUnos();
+                return;
+            }
+
+            if (tfNaziv.getText().length() > 20) {
+                upozorenjePredugacakUnos();
+                return;
+            }
+
             VrstaTeretnogVagona vtv = new VrstaTeretnogVagona();
-            
+
             if (!VrstaTeretnogVagonaController.booleanDodajVTV) {
-                System.out.println("usaoo");
                 vtv = VrstaTeretnogVagonaController.izabranoVTV;
             }
             vtv.setTip(tfVrstaId.getText());
@@ -63,18 +79,18 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
                 VrstaTeretnogVagonaDAO.izmjeniVTV(vtv);
                 VrstaTeretnogVagonaController.booleanDodajVTV = false;
             }
-            
+
         } else {
             upozorenjePoljaSuPrazna();
         }
     }
-    
+
     @FXML
     void nazadNaVrstaTeretnogVagonaForm(ActionEvent event) {
         Parent vrstaTVView;
         try {
             vrstaTVView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/VrstaTeretnogVagona.fxml"));
-            
+
             Scene vrstaTVScene = new Scene(vrstaTVView);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(vrstaTVScene);
@@ -83,14 +99,14 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
             Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @FXML
     void potvrdiUnosVrsteTeretnogVagona(ActionEvent event) {
         unesiVTV();
         Parent vrstaTVView;
         try {
             vrstaTVView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/VrstaTeretnogVagona.fxml"));
-            
+
             Scene vrstaTVScene = new Scene(vrstaTVView);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(vrstaTVScene);
@@ -99,7 +115,32 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
             Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+    private boolean provjeriVTVIDUBazi(String vtvID) {
+        final String zaPoredjenje = vtvID;
+        Optional<VrstaTeretnogVagona> vtvOptional = VrstaTeretnogVagonaController.vtvObservaleList.stream().filter(e -> e.getTip().equals(zaPoredjenje)).findFirst();
+        if (vtvOptional.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    private void upozorenjeVTVID() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("ID vec postoji u BAZI!");
+        alert.showAndWait();
+    }
+
+    private void upozorenjePredugacakUnos() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Predugacak unos!");
+        alert.showAndWait();
+    }
+
     private void upozorenjePoljaSuPrazna() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Greska prilikom unosa podataka !");
@@ -107,7 +148,7 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
         alert.setContentText("Provjerite polja za unos podataka.");
         alert.showAndWait();
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         if (!VrstaTeretnogVagonaController.booleanDodajVTV) {
@@ -117,5 +158,5 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
             tfNaziv.setText(vtv.getNaziv());
         }
     }
-    
+
 }

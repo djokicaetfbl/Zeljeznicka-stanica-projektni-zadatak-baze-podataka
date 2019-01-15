@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="818.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="zeljeznickastanica.controller.PrikazRadnikaController">
+   <children>
+      <TableView fx:id="radniciTableView" layoutX="14.0" layoutY="22.0" prefHeight="306.0" prefWidth="795.0" />
+      <Button fx:id="bNazad" layoutX="22.0" layoutY="351.0" mnemonicParsing="false" onAction="#nazadNaGlavnuFormu" text="Nazad">
+         <font>
+            <Font name="Book Antiqua" size="15.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

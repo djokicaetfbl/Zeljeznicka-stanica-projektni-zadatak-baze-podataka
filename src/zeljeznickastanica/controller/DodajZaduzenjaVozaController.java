@@ -119,6 +119,12 @@ public class DodajZaduzenjaVozaController implements Initializable {
     private void unesiZaduzenjeVoza() {
         if (cmbJMBMasinovodja.getValue() != null && cmbVozID != null && !tfOd.getText().isEmpty() && !tfDo.getText().isEmpty()) {
 
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (!tfDo.getText().matches("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$")) {
+                upozorenjePogresanDatum();
+                return;
+            }
+
             ZaduzenjaVozova zv = new ZaduzenjaVozova();
 
             zv.setJmbMasinovodje(cmbJMBMasinovodja.getValue().toString());
@@ -126,7 +132,7 @@ public class DodajZaduzenjaVozaController implements Initializable {
             zv.setOd(tfOd.getText());
             zv.setDoo(tfDo.getText());
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            //sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 if (!sdf.parse(tfOd.getText()).before(sdf.parse(tfDo.getText()))) {
                     upozorenjeNepravilanUnosDatumDoKojegVrijediZaduzenje();
@@ -154,6 +160,14 @@ public class DodajZaduzenjaVozaController implements Initializable {
         alert.setTitle("Greska prilikom unosa podataka !");
         alert.setHeaderText(null);
         alert.setContentText("Provjerite polja za unos podataka.");
+        alert.showAndWait();
+    }
+
+    private void upozorenjePogresanDatum() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa datuma rodjenja !");
+        alert.setHeaderText(null);
+        alert.setContentText("Provjerite da li je unos datuma ispravan.");
         alert.showAndWait();
     }
 

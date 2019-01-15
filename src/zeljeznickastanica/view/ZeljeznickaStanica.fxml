@@ -75,7 +75,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Prikaz">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="miRadnici" mnemonicParsing="false" onAction="#prikazRadnikaForm" onMenuValidation="#prikazRadnikaForm1" text="Radnika" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Zaduzenja">

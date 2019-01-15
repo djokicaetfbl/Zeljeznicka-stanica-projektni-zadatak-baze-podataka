@@ -8,9 +8,16 @@ package zeljeznickastanica.controller;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +30,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import zeljeznickastanica.model.dao.ConnectionPool;
 import zeljeznickastanica.model.dao.LokomotivaDAO;
 import zeljeznickastanica.model.dao.MasinaDAO;
+import zeljeznickastanica.model.dao.ZaposleniDAO;
 import zeljeznickastanica.model.dto.Lokomotiva;
 import zeljeznickastanica.model.dto.Masina;
 import zeljeznickastanica.model.dto.Voz;
@@ -55,26 +64,49 @@ public class DodajVozController implements Initializable {
     private Button bOdustani;
     @FXML
     private ComboBox<String> cmbTipVoza;
+    @FXML
+    private ComboBox<String> cmbVrstaPogona;
 
     private Voz voz;
 
     private void unesiVoz() {
-        if (!tfVozID.getText().isEmpty() && !tfVrstaPogona.getText().isEmpty() && !tfSirinaKolosjeka.getText().isEmpty()) {
+        if (!tfVozID.getText().isEmpty() && !tfNaziv.getText().isEmpty() && !tfSirinaKolosjeka.getText().isEmpty()
+                && cmbTipVoza.getValue() != null && cmbVrstaPogona.getValue() != null) {
+
+            if (ZeljeznickaStanicaController.booleanDodajVoz && provjeriVozIDUBaz(tfVozID.getText())) {
+                upozorenjeVozID();
+                return;
+            }
+
+            if (tfNaziv.getText().length() > 20) {
+                upozorenjePredugUnos();
+                return;
+            }
+            if (tfVozID.getText().length() > 20) {
+                upozorenjePredugUnos();
+                return;
+            }
+            String sirinaKolosjekaRegex = "^[0-9]+([,.][0-9][0-9]?)?$";
+
+            Pattern pattern = Pattern.compile(sirinaKolosjekaRegex);
+            if (!pattern.matcher(tfSirinaKolosjeka.getText()).matches() || Double.parseDouble(tfSirinaKolosjeka.getText()) < 0) {
+                upozorenjeSirinaKolosjeka();
+                return;
+            }
 
             if (cmbTipVoza.getValue().equals("Lokomotiva")) {
                 Lokomotiva lokomotiva = new Lokomotiva();
                 String tipVoza = cmbTipVoza.getValue().toString();
-                System.out.println("TIP VOZA: " + tipVoza);
                 Double sirinaKolosjeka = Double.parseDouble(tfSirinaKolosjeka.getText());
-                System.out.println("Sirina kolosjeka: " + sirinaKolosjeka);
                 if (!ZeljeznickaStanicaController.booleanDodajVoz) {
                     System.out.println("usaoo");
                     lokomotiva = (Lokomotiva) ZeljeznickaStanicaController.izabraniVoz;
                 }
+
                 lokomotiva.setNaziv(tfNaziv.getText());
                 lokomotiva.setSirinaKolosjeka(sirinaKolosjeka);
                 lokomotiva.setVozId(tfVozID.getText());
-                lokomotiva.setVrstaPogona(tfVrstaPogona.getText());
+                lokomotiva.setVrstaPogona(cmbVrstaPogona.getValue().toString());
                 //lokomotiva.setNamjena(tfNamjena.getText());
                 lokomotiva.setNamjena("prevoz putnika");
                 System.out.println("LOKOMOTIVA: " + lokomotiva);
@@ -104,7 +136,7 @@ public class DodajVozController implements Initializable {
                 masina.setNaziv(tfNaziv.getText());
                 masina.setSirinaKolosjeka(sirinaKolosjeka);
                 masina.setVozId(tfVozID.getText());
-                masina.setVrstaPogona(tfVrstaPogona.getText());
+                masina.setVrstaPogona(cmbVrstaPogona.getValue().toString());
                 // masina.setNamjena(tfNamjena.getText());
                 masina.setNamjena("prevoz tereta");
                 if (ZeljeznickaStanicaController.booleanDodajVoz) {
@@ -156,6 +188,39 @@ public class DodajVozController implements Initializable {
         }
     }
 
+    private void upozorenjeVozID() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Voz id vec postoji u bazi!");
+        alert.showAndWait();
+    }
+
+    private void upozorenjeSirinaKolosjeka() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Nekorektan unos sirine kolosjeka!");
+        alert.showAndWait();
+    }
+
+    private boolean provjeriVozIDUBaz(String vozid) {
+        final String zaPoredjenje = vozid;
+        Optional<Voz> vozOptional = ZeljeznickaStanicaController.vozoviObservaleList.stream().filter(e -> e.getVozId().equals(zaPoredjenje)).findFirst();
+        if (vozOptional.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+    private void upozorenjePredugUnos() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Predugacak unos!");
+        alert.showAndWait();
+    }
+
     private void upozorenjePoljaSuPrazna() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Greska prilikom unosa podataka !");
@@ -167,12 +232,14 @@ public class DodajVozController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         cmbTipVoza.getItems().addAll("Lokomotiva", "Masina");
+        cmbVrstaPogona.getItems().addAll("Dizel", "El. energija");
         if (!ZeljeznickaStanicaController.booleanDodajVoz) {
             voz = ZeljeznickaStanicaController.izabraniVoz;
+            System.out.println("VOZZZZ: " + voz);
             tfNaziv.setText(voz.getNaziv());
             tfVozID.setEditable(false);
             tfVozID.setText(voz.getVozId());
-            tfVrstaPogona.setText(voz.getVrstaPogona());
+            cmbVrstaPogona.getSelectionModel().select(voz.getVrstaPogona());
             tfSirinaKolosjeka.setText(Double.toString(voz.getSirinaKolosjeka()));
             if (((Voz) (ZeljeznickaStanicaController.izabraniVoz)).getNamjena().equals("prevoz putnika")) {
                 cmbTipVoza.getSelectionModel().selectFirst();

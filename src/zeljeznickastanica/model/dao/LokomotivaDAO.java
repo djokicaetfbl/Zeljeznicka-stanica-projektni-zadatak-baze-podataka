@@ -32,7 +32,7 @@ public class LokomotivaDAO {
             rs = statement.executeQuery("select * from lokomotiva_info");
             while (rs.next()) {
                 lokomotiva = new Lokomotiva(rs.getString("vozid"), rs.getString("vrstapogona"),
-                        rs.getString("namjena"), rs.getDouble("sirinakolosjeka"), rs.getString("naziv"));
+                        rs.getString("namjena"), rs.getDouble("sirinakolosjeka"), rs.getString("naziv"),rs.getBoolean("status"));
                 if (!ZeljeznickaStanicaController.vozoviObservaleList.contains(lokomotiva)) {
                     ZeljeznickaStanicaController.vozoviObservaleList.add(lokomotiva);
                 }
@@ -127,7 +127,7 @@ public class LokomotivaDAO {
             rs = callableStatement.executeQuery();
             if (rs.next()) {
                 return new Lokomotiva(rs.getString("vozid"), rs.getString("vrstapogona"), rs.getString("namjena"),
-                        rs.getDouble("sirinakolosjeka"), rs.getString("naziv"));
+                        rs.getDouble("sirinakolosjeka"), rs.getString("naziv"),true);
             }
 
         } catch (SQLException ex) {

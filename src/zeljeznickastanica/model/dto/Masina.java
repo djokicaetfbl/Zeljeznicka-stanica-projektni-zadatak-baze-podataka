@@ -19,8 +19,8 @@ public class Masina extends Voz {
     public Masina() {
     }
 
-    public Masina(String vozId, String vrstaPogona, String namjena, Double sirinaKolosjeka,String naziv) {
-        super(vozId, vrstaPogona, namjena, sirinaKolosjeka,naziv);
+    public Masina(String vozId, String vrstaPogona, String namjena, Double sirinaKolosjeka,String naziv,boolean status) {
+        super(vozId, vrstaPogona, namjena, sirinaKolosjeka,naziv,status);
         this.tipVoza = "Masina";
     }
 

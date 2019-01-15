@@ -21,6 +21,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import zeljeznickastanica.controller.PrikazRadnikaController;
 import zeljeznickastanica.controller.ZeljeznickaStanicaController;
 import static zeljeznickastanica.controller.ZeljeznickaStanicaController.zaposleniObservaleList;
 import zeljeznickastanica.model.dto.Zaposleni;
@@ -240,5 +241,40 @@ public class ZaposleniDAO {
             }
         }
         return null;
+    }
+
+    public static void ubaciUTabeluRadnika() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet rs = null;
+        Zaposleni zaposleni;
+        try {
+            connection = ConnectionPool.getInstance().checkOut();
+            statement = connection.createStatement();
+            rs = statement.executeQuery("select * from zaposleni");
+            while (rs.next()) {
+                zaposleni = new Zaposleni(rs.getString(1),
+                        rs.getString(2), rs.getString(3), rs.getString(4),
+                        rs.getString(5), rs.getInt(6), rs.getBigDecimal(7),
+                        rs.getDate(8), rs.getBoolean(9), rs.getString(10));
+                if (!PrikazRadnikaController.radniciObservaleList.contains(zaposleni)) {
+                    PrikazRadnikaController.radniciObservaleList.add(zaposleni);
+                }
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            if (connection != null) {
+                ConnectionPool.getInstance().checkIn(connection);
+            }
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 }

@@ -17,6 +17,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.ResourceBundle;
@@ -69,28 +70,28 @@ public class DodajZaposlenogController implements Initializable {
     private ComboBox<String> cbMjesta;
     @FXML
     private TextField tfDatumRodjenja;
-    
+
     private String mjesto;
-    
+
     public static HashMap<Integer, String> mjesta = new HashMap<Integer, String>();
 
     //private String[] zanimanje = new String[]{"Kondukter", "Masinovodja", "Otpravnik", "Tehnolog"};//,"Magacioner"};
     private Zaposleni zaposleni;
     ZeljeznickaStanicaController zeljeznickaStanicaController = new ZeljeznickaStanicaController();
-    
+
     public void unesiZaposlenog() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date datum = new Date();
         System.out.println("Datum: " + datum);
-        
+
         if (!tfJMB.getText().isEmpty() && !tfIme.getText().isEmpty() && !tfPrezime.getText().isEmpty() && !tfAdresa.getText().isEmpty()
                 && !tfbrojTelefona.getText().isEmpty() && !tfPlata.getText().isEmpty() && (cbZanimanje.getSelectionModel().getSelectedItem() != null)
                 && (cbMjesta.getSelectionModel().getSelectedItem() != null) && !tfDatumRodjenja.getText().isEmpty()) {
-            
+
             String jmbRegex = "\\d+";
             Pattern pattern = Pattern.compile(jmbRegex);
-            
-            if (!pattern.matcher(tfJMB.getText()).matches() && tfJMB.getText().length() != 13) {
+
+            if (!pattern.matcher(tfJMB.getText()).matches() || tfJMB.getText().length() != 13) {
                 upozorenjeNeispravanJMB();
                 return;
             } else {
@@ -98,21 +99,53 @@ public class DodajZaposlenogController implements Initializable {
                     upoorenjeMaticniBroj();
                     return;
                 }
-                
+
             }
-            
-            if (!tfDatumRodjenja.getText().matches("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$")) {
-                upozorenjePogresanDatum();
+            String date = LocalDate.now().minusYears(18).format(DateTimeFormatter.ISO_LOCAL_DATE);
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                if (!tfDatumRodjenja.getText().matches("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$")
+                        || sdf.parse(tfDatumRodjenja.getText()).after(sdf.parse(date))) {
+                    upozorenjePogresanDatum();
+                    return;
+                }
+            } catch (ParseException ex) {
+                Logger.getLogger(DodajZaposlenogController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if (tfIme.getText().length() > 20) {
+                upozorenjePredugacakUnos();
                 return;
             }
-            
+            if (tfPrezime.getText().length() > 20) {
+                upozorenjePredugacakUnos();
+                return;
+            }
+            if (tfAdresa.getText().length() > 20) {
+                upozorenjePredugacakUnos();
+                return;
+            }
+            String brojTelefona = "\\d+";
+            pattern = Pattern.compile(brojTelefona);
+            if (tfbrojTelefona.getText().length() > 20 || !pattern.matcher(tfbrojTelefona.getText()).matches()) {
+                upozorenjeBrjTelefona();
+                return;
+            }
+            String plataRegex = "^[0-9]+([,.][0-9][0-9]?)?$";
+
+            pattern = Pattern.compile(plataRegex);
+
+            if (Double.parseDouble(tfPlata.getText()) < 0 || !pattern.matcher(tfPlata.getText()).matches()) {
+                upozorenjePlata();
+                return;
+            }
+
             String zanimanjeZaposlenog;
             Date datumRodjenja = null;
             Zaposleni zaposleni = new Zaposleni();
             if (!ZeljeznickaStanicaController.booleanDodaj) {
                 zaposleni = ZeljeznickaStanicaController.izabraniZaposleni;
             }
-            
             mjesto = cbMjesta.getValue().toString();
             //Integer postanskiBroj = provjeriPostanskiBroj(mjesto.split(":")[1]);
             Integer postanskiBroj = Integer.parseInt(cbMjesta.getValue().toString().split(":")[0]);
@@ -135,6 +168,7 @@ public class DodajZaposlenogController implements Initializable {
             zanimanjeZaposlenog = cbZanimanje.getValue().toString();
             if (ZeljeznickaStanicaController.booleanDodaj) {
                 ZaposleniDAO.dodajZaposlenog(zaposleni, zanimanjeZaposlenog);
+                obavjestenjeUspjenoDodatZaposleni();
             } else {
                 //ZaposleniDAO.izbrisiZaposlenog(ZeljeznickaStanicaController.izabraniZaposleni);
                 //ZaposleniDAO.dodajZaposlenog(zaposleni, zanimanjeZaposlenog);
@@ -152,9 +186,9 @@ public class DodajZaposlenogController implements Initializable {
         } else {
             upozorenjePoljaSuPrazna();
         }
-        
+
     }
-    
+
     private boolean provjeriMaticniBrojUBazi(String jmb) {
         Connection connection = null;
         Statement statement = null;
@@ -167,7 +201,7 @@ public class DodajZaposlenogController implements Initializable {
             while (rs.next()) {
                 pomJMB = rs.getString(1);
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DodajZaposlenogController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -184,7 +218,7 @@ public class DodajZaposlenogController implements Initializable {
         }
         return pomJMB == null;
     }
-    
+
     private void ubaciUCBMjesto() {
         Connection connection = null;
         Statement statement = null;
@@ -197,7 +231,7 @@ public class DodajZaposlenogController implements Initializable {
                 cbMjesta.getItems().add(rs.getInt(1) + ":" + rs.getString(2));
                 mjesta.put(rs.getInt(1), rs.getString(2));
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(DodajZaposlenogController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -213,7 +247,7 @@ public class DodajZaposlenogController implements Initializable {
             }
         }
     }
-    
+
     public void potvrdiUnosZaposlenogButton(ActionEvent event) {
         //  if(ZeljeznickaStanicaController.booleanDodaj){
         unesiZaposlenog();
@@ -224,7 +258,7 @@ public class DodajZaposlenogController implements Initializable {
         Parent dodajZaposlenogView;
         try {
             dodajZaposlenogView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
-            
+
             Scene dodajZaposlenogScene = new Scene(dodajZaposlenogView);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(dodajZaposlenogScene);
@@ -233,7 +267,7 @@ public class DodajZaposlenogController implements Initializable {
             Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void odustaniOdUnosaZaposlenogButton(ActionEvent event) {
         //((Stage) bOdustani.getScene().getWindow()).close();
         //if (!ZeljeznickaStanicaController.booleanDodaj) {
@@ -242,7 +276,7 @@ public class DodajZaposlenogController implements Initializable {
         Parent dodajZaposlenogView;
         try {
             dodajZaposlenogView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
-            
+
             Scene dodajZaposlenogScene = new Scene(dodajZaposlenogView);
             Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
             window.setScene(dodajZaposlenogScene);
@@ -251,21 +285,28 @@ public class DodajZaposlenogController implements Initializable {
             Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    private int provjeriPostanskiBroj(String mjesto) {
-        if (mjesto.equals("Banja Luka")) {
-            return 78000;
-        } else if (mjesto.equals("Sarajevo")) {
-            return 71000;
-        } else if (mjesto.equals("Mostar")) {
-            return 88000;
-        } else if (mjesto.equals("Doboj")) {
-            return 74000;
-        } else {
-            return 79000; // prijedor
-        }
+
+    /*  private int provjeriPostanskiBroj(String mjesto) {
+     if (mjesto.equals("Banja Luka")) {
+     return 78000;
+     } else if (mjesto.equals("Sarajevo")) {
+     return 71000;
+     } else if (mjesto.equals("Mostar")) {
+     return 88000;
+     } else if (mjesto.equals("Doboj")) {
+     return 74000;
+     } else {
+     return 79000; // prijedor
+     }
+     } */
+    private void upozorenjePlata() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Provjerite polja za unos plate.");
+        alert.showAndWait();
     }
-    
+
     private void upozorenjePoljaSuPrazna() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Greska prilikom unosa podataka !");
@@ -273,7 +314,25 @@ public class DodajZaposlenogController implements Initializable {
         alert.setContentText("Provjerite polja za unos podataka.");
         alert.showAndWait();
     }
-    
+
+    private void upozorenjePredugacakUnos() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Predugacak unos!");
+        alert.showAndWait();
+
+    }
+
+    private void upozorenjeBrjTelefona() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Greska prilikom unosa podataka !");
+        alert.setHeaderText(null);
+        alert.setContentText("Provjerite broj telefona!");
+        alert.showAndWait();
+
+    }
+
     private void upoorenjeMaticniBroj() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Greska prilikom unosa podataka !");
@@ -281,7 +340,7 @@ public class DodajZaposlenogController implements Initializable {
         alert.setContentText("Uneseni JMB vec postoji u bazi podataka.");
         alert.showAndWait();
     }
-    
+
     private void upozorenjeNeispravanJMB() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Greska prilikom unosa JMB !");
@@ -289,7 +348,7 @@ public class DodajZaposlenogController implements Initializable {
         alert.setContentText("Provjerite da li JMB ima 13 karaktera.");
         alert.showAndWait();
     }
-    
+
     private void upozorenjePogresanDatum() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Greska prilikom unosa datuma rodjenja !");
@@ -297,15 +356,20 @@ public class DodajZaposlenogController implements Initializable {
         alert.setContentText("Provjerite da li je unos ispravan.");
         alert.showAndWait();
     }
-    
+
     private void obavjestenjeUspjenoDodatZaposleni() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Uspjeno dodavanje zaposlenog !");
         alert.setHeaderText(null);
         alert.setContentText("Zaposleni uspjesno dodat");
-        alert.showAndWait();
+        alert.show();
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(DodajZaposlenogController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     private String vratiMiImeMjestaZaposlenoga(int postanskiBroj) {
         for (Map.Entry entry : mjesta.entrySet()) {
             System.out.println(entry.getKey() + ":" + entry.getValue());
@@ -315,11 +379,11 @@ public class DodajZaposlenogController implements Initializable {
         }
         return "";
     }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb
     ) {
-        
+
         cbZanimanje.getItems().addAll("Kondukter", "Masinovodja", "Otpravnik", "Tehnolog");
         ubaciUCBMjesto();
         if (ZeljeznickaStanicaController.booleanDodaj == false) {
@@ -347,5 +411,5 @@ public class DodajZaposlenogController implements Initializable {
             //if(cbZanimanje.getSelectionModel().equals(rb))
         }
     }
-    
+
 }
