@@ -44,6 +44,12 @@ public class PrikazRadnikaController implements Initializable {
     @FXML
     private Button bNazad;
 
+   // @FXML
+   // private Button bVrati;
+
+    //@FXML
+    //private TableColumn<Zaposleni, String> statusColumn;
+
     @FXML
     private TableColumn<Zaposleni, String> jmbColumn;
     @FXML
@@ -66,6 +72,9 @@ public class PrikazRadnikaController implements Initializable {
     public static ObservableList<Zaposleni> radniciObservaleList = FXCollections.observableArrayList();
 
     private void postaviKoloneZaTabeluZaposlenih(ObservableList zaposleni) {
+
+        //statusColumn = new TableColumn<>("Status");
+        // statusColumn.setCellValueFactory(new PropertyValueFactory<>("aktivan"));
         jmbColumn = new TableColumn("JMB");
         jmbColumn.setCellValueFactory(new PropertyValueFactory<>("JMB"));
 
@@ -117,11 +126,16 @@ public class PrikazRadnikaController implements Initializable {
         }
     }
 
+  //  @FXML
+  //  void postaviAktivnog(ActionEvent event) {
+//
+  //  }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         bNazad.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/back.png"))));
         radniciTableView.getColumns().clear();
-
+        System.out.println("AAAAA");
         ZaposleniDAO.ubaciUTabeluRadnika();
         tabelaRadnika(radniciObservaleList);
     }
