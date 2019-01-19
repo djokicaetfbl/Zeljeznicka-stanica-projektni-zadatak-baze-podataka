@@ -25,6 +25,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.ZaposleniDAO;
 import zeljeznickastanica.model.dto.Zaposleni;
@@ -117,6 +119,7 @@ public class PrikazRadnikaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bNazad.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/back.png"))));
         radniciTableView.getColumns().clear();
 
         ZaposleniDAO.ubaciUTabeluRadnika();

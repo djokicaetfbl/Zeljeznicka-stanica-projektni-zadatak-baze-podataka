@@ -25,6 +25,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.PutnickiVagonDAO;
 import zeljeznickastanica.model.dto.PutnickiVagon;
@@ -88,6 +90,8 @@ public class DodajPutnickiVagonController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bPotvrdi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/accept.png"))));
+        bOdustani.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
         if (!ZeljeznickaStanicaController.booleanDodajPutnickiVagon) {
             putnickiVagon = ZeljeznickaStanicaController.izabraniPutnickiVagon;
             tfPutnickiVagonID.setText(putnickiVagon.getVagonId());
@@ -103,24 +107,24 @@ public class DodajPutnickiVagonController implements Initializable {
         }
     }
 
-    public void unesiVagon() {
+    public boolean unesiVagon() {
         if (!tfBrojMjesta.getText().isEmpty() && !tfPutnickiVagonID.getText().isEmpty()) {
 
             if (ZeljeznickaStanicaController.booleanDodajPutnickiVagon && provjeriPutnickiVagonIDUBaz(tfPutnickiVagonID.getText())) {
                 upozorenjeIDVecPostojiUBazi();
-                return;
+                return false;
             }
 
             if (tfPutnickiVagonID.getText().length() > 20) {
                 upozorenjeDuzinaVozID();
-                return;
+                return false;
             }
             String brojMjestaRegex = "\\d+";
             Pattern pattern = Pattern.compile(brojMjestaRegex);
 
             if (!pattern.matcher(tfBrojMjesta.getText()).matches() || Integer.parseInt(tfBrojMjesta.getText()) < 0) {
                 upozorenjeNekorektanUnos();
-                return;
+                return false;
             }
 
             PutnickiVagon putnickiVagon = new PutnickiVagon();
@@ -147,8 +151,9 @@ public class DodajPutnickiVagonController implements Initializable {
 
         } else {
             upozorenjePoljaSuPrazna();
+            return false;
         }
-
+        return true;
     }
 
     @FXML
@@ -169,17 +174,20 @@ public class DodajPutnickiVagonController implements Initializable {
 
     @FXML
     void potvrdiUnosVagona(ActionEvent event) {
-        unesiVagon();
-        Parent zeljeznickaStanicaView;
-        try {
-            zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
+        if (unesiVagon()) {
+            Parent zeljeznickaStanicaView;
+            try {
+                zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
 
-            Scene zeljeznickaStanicaScene = new Scene(zeljeznickaStanicaView);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(zeljeznickaStanicaScene);
-            window.show();
-        } catch (IOException ex) {
-            Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+                Scene zeljeznickaStanicaScene = new Scene(zeljeznickaStanicaView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(zeljeznickaStanicaScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return;
         }
     }
 

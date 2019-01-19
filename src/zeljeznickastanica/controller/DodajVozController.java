@@ -29,6 +29,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.ConnectionPool;
 import zeljeznickastanica.model.dao.LokomotivaDAO;
@@ -69,29 +71,29 @@ public class DodajVozController implements Initializable {
 
     private Voz voz;
 
-    private void unesiVoz() {
+    private boolean unesiVoz() {
         if (!tfVozID.getText().isEmpty() && !tfNaziv.getText().isEmpty() && !tfSirinaKolosjeka.getText().isEmpty()
                 && cmbTipVoza.getValue() != null && cmbVrstaPogona.getValue() != null) {
 
             if (ZeljeznickaStanicaController.booleanDodajVoz && provjeriVozIDUBaz(tfVozID.getText())) {
                 upozorenjeVozID();
-                return;
+                return false;
             }
 
             if (tfNaziv.getText().length() > 20) {
                 upozorenjePredugUnos();
-                return;
+                return false;
             }
             if (tfVozID.getText().length() > 20) {
                 upozorenjePredugUnos();
-                return;
+                return false;
             }
             String sirinaKolosjekaRegex = "^[0-9]+([,.][0-9][0-9]?)?$";
 
             Pattern pattern = Pattern.compile(sirinaKolosjekaRegex);
             if (!pattern.matcher(tfSirinaKolosjeka.getText()).matches() || Double.parseDouble(tfSirinaKolosjeka.getText()) < 0) {
                 upozorenjeSirinaKolosjeka();
-                return;
+                return false;
             }
 
             if (cmbTipVoza.getValue().equals("Lokomotiva")) {
@@ -151,10 +153,11 @@ public class DodajVozController implements Initializable {
             }
         } else {
             upozorenjePoljaSuPrazna();
+            return false;
 
         }
         //comboBox.getValue().toString().equals("Zaposleni")
-
+        return true;
     }
 
     @FXML
@@ -174,17 +177,20 @@ public class DodajVozController implements Initializable {
 
     @FXML
     void potvrdiUnosVoza(ActionEvent event) {
-        unesiVoz();
-        Parent zeljeznickaStanicaView;
-        try {
-            zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
+        if (unesiVoz()) {
+            Parent zeljeznickaStanicaView;
+            try {
+                zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
 
-            Scene zeljeznickaStanicaScene = new Scene(zeljeznickaStanicaView);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(zeljeznickaStanicaScene);
-            window.show();
-        } catch (IOException ex) {
-            Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+                Scene zeljeznickaStanicaScene = new Scene(zeljeznickaStanicaView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(zeljeznickaStanicaScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return;
         }
     }
 
@@ -231,6 +237,8 @@ public class DodajVozController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bPotvrdi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/accept.png"))));
+        bOdustani.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
         cmbTipVoza.getItems().addAll("Lokomotiva", "Masina");
         cmbVrstaPogona.getItems().addAll("Dizel", "El. energija");
         if (!ZeljeznickaStanicaController.booleanDodajVoz) {

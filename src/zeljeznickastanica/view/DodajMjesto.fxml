@@ -26,11 +26,11 @@
       <TextField fx:id="tfPostanskiBroj" layoutX="151.0" layoutY="36.0" prefHeight="25.0" prefWidth="171.0" />
       <TextField fx:id="tfNaziv" layoutX="151.0" layoutY="72.0" prefHeight="25.0" prefWidth="171.0" />
       <TextField fx:id="tfDrzava" layoutX="151.0" layoutY="106.0" prefHeight="25.0" prefWidth="171.0" promptText="npr.: BiH,SRB..." />
-      <Button fx:id="bPotvrdi" layoutX="151.0" layoutY="175.0" mnemonicParsing="false" onAction="#potvrdiUnosMjesta" prefHeight="29.0" prefWidth="82.0" text="Potvrdi">
+      <Button fx:id="bPotvrdi" layoutX="182.0" layoutY="175.0" mnemonicParsing="false" onAction="#potvrdiUnosMjesta" prefHeight="29.0" prefWidth="110.0" text="Potvrdi">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font></Button>
-      <Button fx:id="bOdustani" layoutX="36.0" layoutY="175.0" mnemonicParsing="false" onAction="#odustaniOdUnosaMjesta" prefHeight="29.0" prefWidth="82.0" text="Odustani">
+      <Button fx:id="bOdustani" layoutX="36.0" layoutY="175.0" mnemonicParsing="false" onAction="#odustaniOdUnosaMjesta" prefHeight="29.0" prefWidth="110.0" text="Odustani">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font></Button>

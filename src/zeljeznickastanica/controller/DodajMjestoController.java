@@ -23,6 +23,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.MjestoDAO;
 import zeljeznickastanica.model.dto.Mjesto;
@@ -52,18 +54,18 @@ public class DodajMjestoController implements Initializable {
 
     private Mjesto mjesto;
 
-    private void unesiMjesto() {
+    private boolean unesiMjesto() {
         if (!tfPostanskiBroj.getText().isEmpty() && !tfNaziv.getText().isEmpty() && !tfDrzava.getText().isEmpty()) {
             String postanskiBrojRegex = "\\d+";
             Pattern pattern = Pattern.compile(postanskiBrojRegex);
             if (!pattern.matcher(tfPostanskiBroj.getText()).matches() || tfPostanskiBroj.getText().length() > 20) {
                 upozorenjeNeispravanPostanskiBroj();
-                return;
+                return false;
             }
 
             if (MjestaController.booleanDodaj && provjeriMjestoIDUBazi(Integer.parseInt(tfPostanskiBroj.getText()))) {
                 upozorenjeMjestoID();
-                return;
+                return false;
             }
 
             String slovaRegex = "[a-z A-Z]+";
@@ -71,12 +73,12 @@ public class DodajMjestoController implements Initializable {
 
             if (!pattern.matcher(tfNaziv.getText()).matches() || tfNaziv.getText().length() > 20) {
                 upozorenjeNeispravanUnos();
-                return;
+                return false;
             }
 
             if (!pattern.matcher(tfNaziv.getText()).matches() || tfDrzava.getText().length() > 20) {
                 upozorenjeNeispravanUnos();
-                return;
+                return false;
             }
 
             Mjesto mjesto = new Mjesto();
@@ -98,7 +100,9 @@ public class DodajMjestoController implements Initializable {
 
         } else {
             upozorenjePoljaSuPrazna();
+            return false;
         }
+        return true;
     }
 
     private void upozorenjeMjestoID() {
@@ -160,22 +164,27 @@ public class DodajMjestoController implements Initializable {
 
     @FXML
     void potvrdiUnosMjesta(ActionEvent event) {
-        unesiMjesto();
-        Parent mjestoView;
-        try {
-            mjestoView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/Mjesta.fxml"));
+        if (unesiMjesto()) {
+            Parent mjestoView;
+            try {
+                mjestoView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/Mjesta.fxml"));
 
-            Scene mjestoScene = new Scene(mjestoView);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(mjestoScene);
-            window.show();
-        } catch (IOException ex) {
-            Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+                Scene mjestoScene = new Scene(mjestoView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(mjestoScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return;
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bPotvrdi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/accept.png"))));
+        bOdustani.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
         if (!MjestaController.booleanDodaj) {
             tfPostanskiBroj.setEditable(false);
             mjesto = MjestaController.izabranoMjesto;

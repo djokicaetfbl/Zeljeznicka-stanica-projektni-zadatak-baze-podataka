@@ -21,6 +21,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.VrstaTeretnogVagonaDAO;
 import zeljeznickastanica.model.dto.Mjesto;
@@ -48,22 +50,22 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
 
     private VrstaTeretnogVagona vtv;
 
-    private void unesiVTV() {
+    private boolean unesiVTV() {
         if (!tfVrstaId.getText().isEmpty() && !tfNaziv.getText().isEmpty()) {
 
             if (VrstaTeretnogVagonaController.booleanDodajVTV && provjeriVTVIDUBazi(tfVrstaId.getText())) {
                 upozorenjeVTVID();
-                return;
+                return false;
             }
 
             if (tfVrstaId.getText().length() > 20) {
                 upozorenjePredugacakUnos();
-                return;
+                return false;
             }
 
             if (tfNaziv.getText().length() > 20) {
                 upozorenjePredugacakUnos();
-                return;
+                return false;
             }
 
             VrstaTeretnogVagona vtv = new VrstaTeretnogVagona();
@@ -82,7 +84,9 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
 
         } else {
             upozorenjePoljaSuPrazna();
+            return false;
         }
+        return true;
     }
 
     @FXML
@@ -102,17 +106,20 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
 
     @FXML
     void potvrdiUnosVrsteTeretnogVagona(ActionEvent event) {
-        unesiVTV();
-        Parent vrstaTVView;
-        try {
-            vrstaTVView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/VrstaTeretnogVagona.fxml"));
+        if (unesiVTV()) {
+            Parent vrstaTVView;
+            try {
+                vrstaTVView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/VrstaTeretnogVagona.fxml"));
 
-            Scene vrstaTVScene = new Scene(vrstaTVView);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(vrstaTVScene);
-            window.show();
-        } catch (IOException ex) {
-            Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+                Scene vrstaTVScene = new Scene(vrstaTVView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(vrstaTVScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return;
         }
     }
 
@@ -151,6 +158,10 @@ public class DadajVrstuTeretnogVagonaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        bPotvrdi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/accept.png"))));
+        bOdustani.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
+
         if (!VrstaTeretnogVagonaController.booleanDodajVTV) {
             vtv = VrstaTeretnogVagonaController.izabranoVTV;
             tfVrstaId.setText(vtv.getTip());

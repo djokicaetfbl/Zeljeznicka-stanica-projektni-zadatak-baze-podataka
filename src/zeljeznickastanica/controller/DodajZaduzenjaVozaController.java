@@ -26,9 +26,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import zeljeznickastanica.model.dao.ConnectionPool;
 import zeljeznickastanica.model.dao.ZaduzenjaVozovaDAO;
 import zeljeznickastanica.model.dto.Mjesto;
@@ -116,13 +120,13 @@ public class DodajZaduzenjaVozaController implements Initializable {
         }
     }
 
-    private void unesiZaduzenjeVoza() {
-        if (cmbJMBMasinovodja.getValue() != null && cmbVozID != null && !tfOd.getText().isEmpty() && !tfDo.getText().isEmpty()) {
+    private boolean unesiZaduzenjeVoza() {
+        if (cmbJMBMasinovodja.getValue() != null && cmbVozID.getValue() != null && !tfOd.getText().isEmpty() && !tfDo.getText().isEmpty()) {
 
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (!tfDo.getText().matches("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$")) {
                 upozorenjePogresanDatum();
-                return;
+                return false;
             }
 
             ZaduzenjaVozova zv = new ZaduzenjaVozova();
@@ -144,7 +148,9 @@ public class DodajZaduzenjaVozaController implements Initializable {
             ZaduzenjaVozovaDAO.dodajZaduzenjeVoza(zv);
         } else {
             upozorenjePoljaSuPrazna();
+            return false;
         }
+        return true;
     }
 
     private void upozorenjeNepravilanUnosDatumDoKojegVrijediZaduzenje() {
@@ -156,10 +162,10 @@ public class DodajZaduzenjaVozaController implements Initializable {
     }
 
     private void upozorenjePoljaSuPrazna() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Provjerite polja za unos podataka.", ButtonType.OK);
         alert.setTitle("Greska prilikom unosa podataka !");
         alert.setHeaderText(null);
-        alert.setContentText("Provjerite polja za unos podataka.");
+        //alert.setContentText("Provjerite polja za unos podataka.");
         alert.showAndWait();
     }
 
@@ -190,24 +196,30 @@ public class DodajZaduzenjaVozaController implements Initializable {
 
     @FXML
     void potvrdiZaduzivanjeVoza(ActionEvent event) {
-        unesiZaduzenjeVoza();
-        Parent mjestoView;
-        try {
-            mjestoView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZaduzenjaVozova.fxml"));
+        if (unesiZaduzenjeVoza()) {
+            Parent mjestoView;
+            try {
+                mjestoView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZaduzenjaVozova.fxml"));
 
-            Scene mjestoScene = new Scene(mjestoView);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(mjestoScene);
-            window.show();
+                Scene mjestoScene = new Scene(mjestoView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(mjestoScene);
+                window.show();
+                // window.showAndWait();
 
-        } catch (IOException ex) {
-            Logger.getLogger(MjestaController.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(MjestaController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return;
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bPotvrdi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/accept.png"))));
+        bOdustani.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
         tfOd.setText(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
         tfOd.setEditable(false);
         ubaciUCMBJMBMasinovodja();

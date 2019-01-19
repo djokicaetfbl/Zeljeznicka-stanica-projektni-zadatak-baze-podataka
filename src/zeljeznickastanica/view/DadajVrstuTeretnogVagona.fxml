@@ -7,8 +7,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane id="AnchorPane" prefHeight="145.0" prefWidth="288.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.171" fx:controller="zeljeznickastanica.controller.DadajVrstuTeretnogVagonaController">
+<AnchorPane id="AnchorPane" prefHeight="145.0" prefWidth="288.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.DadajVrstuTeretnogVagonaController">
    <children>
       <VBox layoutX="14.0" layoutY="14.0" prefHeight="59.0" prefWidth="72.0" spacing="15.0">
          <children>
@@ -30,12 +29,12 @@
             <TextField fx:id="tfNaziv" />
          </children>
       </VBox>
-      <Button fx:id="bOdustani" layoutX="24.0" layoutY="93.0" mnemonicParsing="false" onAction="#nazadNaVrstaTeretnogVagonaForm" text="Odustani">
+      <Button fx:id="bOdustani" layoutX="24.0" layoutY="93.0" mnemonicParsing="false" onAction="#nazadNaVrstaTeretnogVagonaForm" prefHeight="29.0" prefWidth="109.0" text="Odustani">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="bPotvrdi" layoutX="131.0" layoutY="93.0" mnemonicParsing="false" onAction="#potvrdiUnosVrsteTeretnogVagona" text="Potvrdi">
+      <Button fx:id="bPotvrdi" layoutX="157.0" layoutY="93.0" mnemonicParsing="false" onAction="#potvrdiUnosVrsteTeretnogVagona" prefHeight="29.0" prefWidth="109.0" text="Potvrdi">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>

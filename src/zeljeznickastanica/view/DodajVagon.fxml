@@ -70,7 +70,7 @@
             <CheckBox fx:id="cbRestoran" mnemonicParsing="false" />
          </children>
       </VBox>
-      <Button fx:id="bOdustani" layoutX="43.0" layoutY="321.0" mnemonicParsing="false" onAction="#odustaniOdUnosaVagona" text="Odustani" />
-      <Button fx:id="bPotvrdi" layoutX="229.0" layoutY="321.0" mnemonicParsing="false" onAction="#potvrdiUnosVagona" prefHeight="25.0" prefWidth="64.0" text="Potvrdi" />
+      <Button fx:id="bOdustani" layoutX="43.0" layoutY="321.0" mnemonicParsing="false" onAction="#odustaniOdUnosaVagona" prefHeight="25.0" prefWidth="110.0" text="Odustani" />
+      <Button fx:id="bPotvrdi" layoutX="229.0" layoutY="321.0" mnemonicParsing="false" onAction="#potvrdiUnosVagona" prefHeight="25.0" prefWidth="110.0" text="Potvrdi" />
    </children>
 </AnchorPane>

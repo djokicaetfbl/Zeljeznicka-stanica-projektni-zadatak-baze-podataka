@@ -66,12 +66,12 @@
             <TextField fx:id="tfZapreminaUnutrasnjosti" promptText="npr. 72" />
          </children>
       </VBox>
-      <Button fx:id="bOdustani" layoutX="68.0" layoutY="348.0" mnemonicParsing="false" onAction="#odustaniOdUnosaVagona" text="Odustani">
+      <Button fx:id="bOdustani" layoutX="68.0" layoutY="348.0" mnemonicParsing="false" onAction="#odustaniOdUnosaVagona" prefHeight="29.0" prefWidth="110.0" text="Odustani">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="bPotvrdi" layoutX="226.0" layoutY="348.0" mnemonicParsing="false" onAction="#potvrdiUnosVagona" prefHeight="29.0" prefWidth="82.0" text="Potvrdi">
+      <Button fx:id="bPotvrdi" layoutX="226.0" layoutY="348.0" mnemonicParsing="false" onAction="#potvrdiUnosVagona" prefHeight="29.0" prefWidth="110.0" text="Potvrdi">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>

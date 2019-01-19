@@ -26,6 +26,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.MjestoDAO;
 import zeljeznickastanica.model.dao.VrstaTeretnogVagonaDAO;
@@ -169,6 +171,12 @@ public class MjestaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        bNazad.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/back.png"))));
+        bDodaj.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/rsz_plus.png"))));
+        bIzmjeni.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/restart.png"))));
+        bPretrazi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/search.png"))));
+
         mjestaTableView.getColumns().clear();
         MjestoDAO.ubaciUTabeluMjesta();
         tabelaMjesta(mjestaObservaleList);

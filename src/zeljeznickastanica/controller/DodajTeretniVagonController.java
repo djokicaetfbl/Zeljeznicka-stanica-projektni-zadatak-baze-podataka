@@ -27,6 +27,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.ConnectionPool;
 import zeljeznickastanica.model.dao.TeretniVagonDAO;
@@ -74,46 +76,46 @@ public class DodajTeretniVagonController implements Initializable {
     private TeretniVagon teretniVagon;
 
     @FXML
-    public void unesiVagon() {
+    public boolean unesiVagon() {
         if (!tfTeretniVagonID.getText().isEmpty() && (cmbTipTeretnogVagona.getValue() != null) && !tfDuzPrekoOdbojnika.getText().isEmpty()
                 && !tfUkupnaVisina.getText().isEmpty() && !tfProsVlastitaMasa.getText().isEmpty() && !tfNosivost.getText().isEmpty()
                 && !tfPovrsinaUnutrasnjosti.getText().isEmpty() && !tfZapreminaUnutrasnjosti.getText().isEmpty()) {
 
             if (ZeljeznickaStanicaController.booleanDodajTeretniVagon && provjeriTeretniVagonIDUBaz(tfTeretniVagonID.getText())) {
                 upozorenjeIDVecPostojiUBazi();
-                return;
+                return false;
             }
 
             if (tfTeretniVagonID.getText().length() > 20) {
                 upozorenjeDuzinaVozID();
-                return;
+                return false;
             }
 
             String decimalRegex = "^[0-9]+([,.][0-9][0-9]?)?$";
             Pattern pattern = Pattern.compile(decimalRegex);
             if (!pattern.matcher(tfDuzPrekoOdbojnika.getText()).matches() || Double.parseDouble(tfDuzPrekoOdbojnika.getText()) < 0) {
                 upozorenjeNekorektanUnos();
-                return;
+                return false;
             }
             if (!pattern.matcher(tfUkupnaVisina.getText()).matches() || Double.parseDouble(tfUkupnaVisina.getText()) < 0) {
                 upozorenjeNekorektanUnos();
-                return;
+                return false;
             }
             if (!pattern.matcher(tfProsVlastitaMasa.getText()).matches() || Double.parseDouble(tfProsVlastitaMasa.getText()) < 0) {
                 upozorenjeNekorektanUnos();
-                return;
+                return false;
             }
             if (!pattern.matcher(tfNosivost.getText()).matches() || Double.parseDouble(tfNosivost.getText()) < 0) {
                 upozorenjeNekorektanUnos();
-                return;
+                return false;
             }
             if (!pattern.matcher(tfPovrsinaUnutrasnjosti.getText()).matches() || Double.parseDouble(tfPovrsinaUnutrasnjosti.getText()) < 0) {
                 upozorenjeNekorektanUnos();
-                return;
+                return false;
             }
             if (!pattern.matcher(tfZapreminaUnutrasnjosti.getText()).matches() || Double.parseDouble(tfZapreminaUnutrasnjosti.getText()) < 0) {
                 upozorenjeNekorektanUnos();
-                return;
+                return false;
             }
 
             TeretniVagon teretniVagon = new TeretniVagon();
@@ -138,8 +140,9 @@ public class DodajTeretniVagonController implements Initializable {
 
         } else {
             upozorenjePoljaSuPrazna();
+            return false;
         }
-
+        return true;
     }
 
     private void upozorenjePoljaSuPrazna() {
@@ -231,22 +234,27 @@ public class DodajTeretniVagonController implements Initializable {
 
     @FXML
     void potvrdiUnosVagona(ActionEvent event) {
-        unesiVagon();
-        Parent zeljeznickaStanicaView;
-        try {
-            zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
+        if (unesiVagon()) {
+            Parent zeljeznickaStanicaView;
+            try {
+                zeljeznickaStanicaView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
 
-            Scene zeljeznickaStanicaScene = new Scene(zeljeznickaStanicaView);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(zeljeznickaStanicaScene);
-            window.show();
-        } catch (IOException ex) {
-            Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+                Scene zeljeznickaStanicaScene = new Scene(zeljeznickaStanicaView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(zeljeznickaStanicaScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(MjestaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return;
         }
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        bPotvrdi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/accept.png"))));
+        bOdustani.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
         //cmbTipTeretnogVagona.getItems().addAll("Zatvoreni", "Otvoreni");
         ubaciUCMBTipTeretnogVagona();
         if (!ZeljeznickaStanicaController.booleanDodajTeretniVagon) {

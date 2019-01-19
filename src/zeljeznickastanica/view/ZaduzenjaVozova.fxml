@@ -9,14 +9,14 @@
 
 <AnchorPane id="AnchorPane" prefHeight="345.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="zeljeznickastanica.controller.ZaduzenjaVozovaController">
    <children>
-      <HBox layoutX="14.0" layoutY="14.0" prefHeight="47.0" prefWidth="200.0" spacing="30.0">
+      <HBox layoutX="14.0" layoutY="14.0" prefHeight="47.0" prefWidth="281.0" spacing="30.0">
          <children>
-            <Button fx:id="bDodaj" mnemonicParsing="false" onAction="#dodajZaduzenje" prefHeight="29.0" prefWidth="65.0" text="Dodaj">
+            <Button fx:id="bDodaj" mnemonicParsing="false" onAction="#dodajZaduzenje" prefHeight="29.0" prefWidth="125.0" text="Dodaj">
                <font>
                   <Font name="Book Antiqua" size="15.0" />
                </font>
             </Button>
-            <Button fx:id="bPretrazi" mnemonicParsing="false" onAction="#pretraziZaduzenje" text="Pretrazi">
+            <Button fx:id="bPretrazi" mnemonicParsing="false" onAction="#pretraziZaduzenje" prefHeight="29.0" prefWidth="125.0" text="Pretrazi">
                <font>
                   <Font name="Book Antiqua" size="15.0" />
                </font>
@@ -24,12 +24,12 @@
          </children>
       </HBox>
       <TableView fx:id="zaduzenjaVozovaTableView" layoutX="14.0" layoutY="61.0" prefHeight="200.0" prefWidth="573.0" />
-      <Button fx:id="bNazad" layoutX="14.0" layoutY="288.0" mnemonicParsing="false" onAction="#nazadNaGlavnuFormu" prefHeight="29.0" prefWidth="66.0" text="Nazad">
+      <Button fx:id="bNazad" layoutX="14.0" layoutY="288.0" mnemonicParsing="false" onAction="#nazadNaGlavnuFormu" prefHeight="29.0" prefWidth="125.0" text="Nazad">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>
       </Button>
-      <TextField fx:id="tfPretrazi" layoutX="199.0" layoutY="14.0" prefHeight="25.0" prefWidth="288.0" promptText="Unesite JMB duzioca">
+      <TextField fx:id="tfPretrazi" layoutX="300.0" layoutY="14.0" prefHeight="25.0" prefWidth="288.0" promptText="Unesite JMB duzioca">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>

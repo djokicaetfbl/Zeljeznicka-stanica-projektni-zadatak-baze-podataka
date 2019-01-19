@@ -117,14 +117,14 @@ public class MasinaDAO {
         }
     }
 
-    public static Masina pretraziVoz(String naziv) {
+    public static Masina pretraziVoz(String vozId) {
         Connection connection = null;
         CallableStatement callableStatement = null;
         ResultSet rs = null;
         try {
             connection = ConnectionPool.getInstance().checkOut();
             callableStatement = connection.prepareCall("{call pretrazi_masinu(?)}");
-            callableStatement.setString(1, naziv);
+            callableStatement.setString(1, vozId);
             rs = callableStatement.executeQuery();
             if (rs.next()) {
                 return new Masina(rs.getString("vozid"), rs.getString("vrstapogona"), rs.getString("namjena"),

@@ -50,6 +50,7 @@ public class PutnickiVagon extends Vagon {
     public boolean isToalet() {
         return toalet;
     }
+    
 
     public void setToalet(boolean toalet) {
         this.toalet = toalet;

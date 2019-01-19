@@ -80,12 +80,12 @@
             <Insets top="15.0" />
          </padding>
       </VBox>
-      <Button fx:id="bPotvrdi" layoutX="252.0" layoutY="438.0" mnemonicParsing="false" onAction="#potvrdiUnosZaposlenogButton" prefHeight="29.0" prefWidth="89.0" text="Potvrdi">
+      <Button fx:id="bPotvrdi" layoutX="252.0" layoutY="438.0" mnemonicParsing="false" onAction="#potvrdiUnosZaposlenogButton" prefHeight="29.0" prefWidth="110.0" text="Potvrdi">
          <font>
             <Font name="Book Antiqua" size="15.0" />
          </font>
       </Button>
-      <Button fx:id="bOdustani" layoutX="45.0" layoutY="436.0" mnemonicParsing="false" onAction="#odustaniOdUnosaZaposlenogButton" prefHeight="19.0" prefWidth="89.0" text="Odustani">
+      <Button fx:id="bOdustani" layoutX="45.0" layoutY="436.0" mnemonicParsing="false" onAction="#odustaniOdUnosaZaposlenogButton" prefHeight="19.0" prefWidth="110.0" text="Odustani">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>

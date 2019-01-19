@@ -116,14 +116,14 @@ public class LokomotivaDAO {
         }
     }
 
-    public static Lokomotiva pretraziVoz(String naziv) {
+    public static Lokomotiva pretraziVoz(String vozId) {
         Connection connection = null;
         CallableStatement callableStatement = null;
         ResultSet rs = null;
         try {
             connection = ConnectionPool.getInstance().checkOut();
             callableStatement = connection.prepareCall("{call pretrazi_lokomotivu(?)}");
-            callableStatement.setString(1, naziv);
+            callableStatement.setString(1, vozId);
             rs = callableStatement.executeQuery();
             if (rs.next()) {
                 return new Lokomotiva(rs.getString("vozid"), rs.getString("vrstapogona"), rs.getString("namjena"),

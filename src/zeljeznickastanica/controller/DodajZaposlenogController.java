@@ -48,7 +48,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Window;
 
 /**
  * FXML Controller class
@@ -79,7 +83,8 @@ public class DodajZaposlenogController implements Initializable {
     private Zaposleni zaposleni;
     ZeljeznickaStanicaController zeljeznickaStanicaController = new ZeljeznickaStanicaController();
 
-    public void unesiZaposlenog() {
+    //public void unesiZaposlenog() {
+    public boolean unesiZaposlenog() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         Date datum = new Date();
         System.out.println("Datum: " + datum);
@@ -93,11 +98,11 @@ public class DodajZaposlenogController implements Initializable {
 
             if (!pattern.matcher(tfJMB.getText()).matches() || tfJMB.getText().length() != 13) {
                 upozorenjeNeispravanJMB();
-                return;
+                return false;
             } else {
                 if (!provjeriMaticniBrojUBazi(tfJMB.getText()) && ZeljeznickaStanicaController.booleanDodaj) {
                     upoorenjeMaticniBroj();
-                    return;
+                    return false;
                 }
 
             }
@@ -107,7 +112,7 @@ public class DodajZaposlenogController implements Initializable {
                 if (!tfDatumRodjenja.getText().matches("^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$")
                         || sdf.parse(tfDatumRodjenja.getText()).after(sdf.parse(date))) {
                     upozorenjePogresanDatum();
-                    return;
+                    return false;
                 }
             } catch (ParseException ex) {
                 Logger.getLogger(DodajZaposlenogController.class.getName()).log(Level.SEVERE, null, ex);
@@ -115,21 +120,21 @@ public class DodajZaposlenogController implements Initializable {
 
             if (tfIme.getText().length() > 20) {
                 upozorenjePredugacakUnos();
-                return;
+                return false;
             }
             if (tfPrezime.getText().length() > 20) {
                 upozorenjePredugacakUnos();
-                return;
+                // return;
             }
             if (tfAdresa.getText().length() > 20) {
                 upozorenjePredugacakUnos();
-                return;
+                return false;
             }
             String brojTelefona = "\\d+";
             pattern = Pattern.compile(brojTelefona);
             if (tfbrojTelefona.getText().length() > 20 || !pattern.matcher(tfbrojTelefona.getText()).matches()) {
                 upozorenjeBrjTelefona();
-                return;
+                //  return;
             }
             String plataRegex = "^[0-9]+([,.][0-9][0-9]?)?$";
 
@@ -137,7 +142,7 @@ public class DodajZaposlenogController implements Initializable {
 
             if (Double.parseDouble(tfPlata.getText()) < 0 || !pattern.matcher(tfPlata.getText()).matches()) {
                 upozorenjePlata();
-                return;
+                return false;
             }
 
             String zanimanjeZaposlenog;
@@ -185,8 +190,11 @@ public class DodajZaposlenogController implements Initializable {
             cbMjesta.getSelectionModel().clearSelection();
         } else {
             upozorenjePoljaSuPrazna();
-        }
+            //System.out.println("ASSSA");
 
+            return false;
+        }
+        return true;
     }
 
     private boolean provjeriMaticniBrojUBazi(String jmb) {
@@ -249,30 +257,25 @@ public class DodajZaposlenogController implements Initializable {
     }
 
     public void potvrdiUnosZaposlenogButton(ActionEvent event) {
-        //  if(ZeljeznickaStanicaController.booleanDodaj){
-        unesiZaposlenog();
-        // ZeljeznickaStanicaController.booleanDodaj = false;
-        // } else {
-        //     System.out.println("IZMJENA !");
-        //  }
-        Parent dodajZaposlenogView;
-        try {
-            dodajZaposlenogView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
+        if (unesiZaposlenog()) {
 
-            Scene dodajZaposlenogScene = new Scene(dodajZaposlenogView);
-            Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            window.setScene(dodajZaposlenogScene);
-            window.show();
-        } catch (IOException ex) {
-            Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
+            Parent dodajZaposlenogView;
+            try {
+                dodajZaposlenogView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
+
+                Scene dodajZaposlenogScene = new Scene(dodajZaposlenogView);
+                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                window.setScene(dodajZaposlenogScene);
+                window.show();
+            } catch (IOException ex) {
+                Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            return;
         }
     }
 
     public void odustaniOdUnosaZaposlenogButton(ActionEvent event) {
-        //((Stage) bOdustani.getScene().getWindow()).close();
-        //if (!ZeljeznickaStanicaController.booleanDodaj) {
-        //     unesiZaposlenog();
-        // }
         Parent dodajZaposlenogView;
         try {
             dodajZaposlenogView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/ZeljeznickaStanica.fxml"));
@@ -308,11 +311,13 @@ public class DodajZaposlenogController implements Initializable {
     }
 
     private void upozorenjePoljaSuPrazna() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(Alert.AlertType.ERROR, "Provjerite polja za unos podataka.", ButtonType.OK);
+        // Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Greska prilikom unosa podataka !");
         alert.setHeaderText(null);
-        alert.setContentText("Provjerite polja za unos podataka.");
+        // alert.setContentText("Provjerite polja za unos podataka.");
         alert.showAndWait();
+        return;
     }
 
     private void upozorenjePredugacakUnos() {
@@ -383,7 +388,8 @@ public class DodajZaposlenogController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb
     ) {
-
+        bPotvrdi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/accept.png"))));
+        bOdustani.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
         cbZanimanje.getItems().addAll("Kondukter", "Masinovodja", "Otpravnik", "Tehnolog");
         ubaciUCBMjesto();
         if (ZeljeznickaStanicaController.booleanDodaj == false) {
