@@ -5,7 +5,9 @@
  */
 package zeljeznickastanica.controller;
 
-import com.sun.org.apache.xml.internal.utils.Trie;
+//import com.sun.org.apache.xml.internal.utils.Trie;
+//import com.sun.xml.internal.bind.v2.runtime.unmarshaller.Loader;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -14,6 +16,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -41,10 +45,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import zeljeznickastanica.model.dao.ConnectionPool;
 import zeljeznickastanica.model.dao.LokomotivaDAO;
 import zeljeznickastanica.model.dao.MasinaDAO;
+import zeljeznickastanica.model.dao.MasinovodjaDAO;
 import zeljeznickastanica.model.dao.PutnickiVagonDAO;
 import zeljeznickastanica.model.dao.TeretniVagonDAO;
 import zeljeznickastanica.model.dao.VagonDAO;
@@ -76,6 +82,9 @@ public class ZeljeznickaStanicaController implements Initializable {
     private Button bPretrazi;
     @FXML
     private TableView univerzalnaTabelaTableView;
+
+    @FXML
+    private Label lUputstvo;
 
     @FXML
     private TableColumn<Zaposleni, String> jmbColumn;
@@ -127,6 +136,8 @@ public class ZeljeznickaStanicaController implements Initializable {
     public static TeretniVagon teretniVagonIzPretrage;
 
     @FXML
+    TableColumn<Voz, String> vozIDColumn;
+    @FXML
     TableColumn<Voz, String> vozNazivColumn;
     @FXML
     TableColumn<Voz, String> vozIdColumn;
@@ -161,6 +172,8 @@ public class ZeljeznickaStanicaController implements Initializable {
     public static ObservableList<Vagon> vagoniPutnickiObservableList = FXCollections.observableArrayList();
 
     @FXML
+    private Button bIzbrisiIzBaze;
+    @FXML
     TableColumn<Vagon, String> vagonIdColumn;
     @FXML
     TableColumn<Vagon, String> tipColumn;
@@ -185,6 +198,14 @@ public class ZeljeznickaStanicaController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+
+        lUputstvo.setVisible(false);
+        bIzbrisiIzBaze.setVisible(false);
+        bDodaj.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/rsz_plus.png"))));
+        bIzbrisi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
+        bIzmjeni.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/restart.png"))));
+        bPretrazi.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/search.png"))));
+
         comboBox.getItems().addAll("Voz", "Zaposleni", "Vagon");
         cmbTipVagona.getItems().addAll("Putnicki vagon", "Teretni vagon");
         cmbTipVagona.setVisible(false);
@@ -355,19 +376,19 @@ public class ZeljeznickaStanicaController implements Initializable {
             vozoviObservaleList = univerzalnaTabelaTableView.getItems();
             izabranaVrsta = univerzalnaTabelaTableView.getSelectionModel().getSelectedItems();
             izabraniVoz = (Voz) izabranaVrsta.get(0);
-            System.out.println("IZABRANI VOZ : "+izabraniVoz);
+            System.out.println("IZABRANI VOZ : " + izabraniVoz);
             if (izabraniVoz != null) {
                 Parent dodajVozView;
-            try {
-                dodajVozView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/DodajVoz.fxml"));
+                try {
+                    dodajVozView = FXMLLoader.load(getClass().getResource("/zeljeznickastanica/view/DodajVoz.fxml"));
 
-                Scene dodajVozScene = new Scene(dodajVozView);
-                Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                window.setScene(dodajVozScene);
-                window.show();
-            } catch (IOException ex) {
-                Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                    Scene dodajVozScene = new Scene(dodajVozView);
+                    Stage window = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    window.setScene(dodajVozScene);
+                    window.show();
+                } catch (IOException ex) {
+                    Logger.getLogger(ZeljeznickaStanicaController.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 booleanDodajVoz = false;
             } else {
                 upozorenjeComboBox(); // treba staviti upozorenje niste izabrali nista
@@ -445,6 +466,8 @@ public class ZeljeznickaStanicaController implements Initializable {
                 ObservableList<Zaposleni> zaposleniIzPretrageObservableList = FXCollections.observableArrayList();
                 zaposleniIzPretrageObservableList.add(zaposleniIzPretrage);
                 tabelaZaposlenih(zaposleniIzPretrageObservableList);
+            } else if (tfPretraga.getText().equals("")) {
+                tabelaZaposlenih(zaposleniObservaleList);
             } else {
                 upozorenjePretraga();
                 return;
@@ -464,10 +487,12 @@ public class ZeljeznickaStanicaController implements Initializable {
                 ObservableList<Voz> lokomotivaIzPretrageObservableList = FXCollections.observableArrayList();
                 lokomotivaIzPretrageObservableList.add(lokomotivaIzPretrage);
                 tabelaVozova(lokomotivaIzPretrageObservableList);
-            } else {
+            } else if (masinaIzPretrage != null) {
                 ObservableList<Voz> masinaIzPretrageObservableList = FXCollections.observableArrayList();
                 masinaIzPretrageObservableList.add(masinaIzPretrage);
                 tabelaVozova(masinaIzPretrageObservableList);
+            } else if (tfPretraga.getText().equals("")) {
+                tabelaVozova(vozoviObservaleList);
             }
 
             // } else {
@@ -485,6 +510,8 @@ public class ZeljeznickaStanicaController implements Initializable {
                         ObservableList<PutnickiVagon> putnickiVagonIzPretrageObservableList = FXCollections.observableArrayList();
                         putnickiVagonIzPretrageObservableList.add(putnickiVagonIzPretrage);
                         tabelaPutnickihVagona(putnickiVagonIzPretrageObservableList);
+                    } else if (tfPretraga.getText().equals("")) {
+                        tabelaPutnickihVagona(vagoniPutnickiObservableList);
                     }
                 } else if (cmbTipVagona.getSelectionModel().getSelectedItem().equals("Teretni vagon")) {
                     tfPretraga.setPromptText("");
@@ -497,6 +524,8 @@ public class ZeljeznickaStanicaController implements Initializable {
                         ObservableList<TeretniVagon> teretniVagonIzPretrageObservableList = FXCollections.observableArrayList();
                         teretniVagonIzPretrageObservableList.add(teretniVagonIzPretrage);
                         tabelaTeretnihVagona(teretniVagonIzPretrageObservableList);
+                    } else if (tfPretraga.getText().equals("")) {
+                        tabelaTeretnihVagona(vagoniTeretniObservableList);
                     }
                 }
 
@@ -509,6 +538,9 @@ public class ZeljeznickaStanicaController implements Initializable {
 
     public void izaberiIzKomboBoksa() {
         if (comboBox.getValue().toString().equals("Zaposleni")) {
+            // bIzbrisiIzBaze.setVisible(true);
+            lUputstvo.setVisible(false);
+            bIzbrisiIzBaze.setGraphic(new ImageView(new Image(getClass().getResourceAsStream("/zeljeznickastanica/resursi/minus.png"))));
             tfPretraga.setText("");
             tfPretraga.setPromptText("");
             tfPretraga.setPromptText("Unesite JMB zaposlenog");
@@ -518,14 +550,19 @@ public class ZeljeznickaStanicaController implements Initializable {
         }
 
         if (comboBox.getValue().toString().equals("Voz")) {
+            lUputstvo.setVisible(false);
+            bIzbrisiIzBaze.setVisible(false);
             tfPretraga.setText("");
             tfPretraga.setPromptText("");
-            tfPretraga.setPromptText("Unesite naziv voza za pretragu");
+            tfPretraga.setPromptText("Unesite ID voza za pretragu");
             cmbTipVagona.setVisible(false);
             resetujTabelu();
             tabelaVozova(vozoviObservaleList);
         }
         if (comboBox.getValue().toString().equals("Vagon")) {
+            lUputstvo.setVisible(false);
+            lUputstvo.setVisible(true);
+            bIzbrisiIzBaze.setVisible(false);
             tfPretraga.setText("");
             tfPretraga.setPromptText("");
             tfPretraga.setPromptText("Unesite ID vagona za pretragu");
@@ -551,6 +588,15 @@ public class ZeljeznickaStanicaController implements Initializable {
             resetujTabelu();
             tabelaTeretnihVagona(vagoniTeretniObservableList);
         }
+    }
+
+    @FXML
+    void izbrisiZaposlenogIzBaze(ActionEvent event) {
+        Zaposleni zaposleni;
+        ObservableList<Zaposleni> izabranaVrsta, zaposleniObservaleList;
+        zaposleniObservaleList = univerzalnaTabelaTableView.getItems();
+        izabranaVrsta = univerzalnaTabelaTableView.getSelectionModel().getSelectedItems();
+        MasinovodjaDAO.izbrisiZaposlenogIzBaze((Zaposleni) izabranaVrsta.get(0));
     }
 
     public void resetujTabelu() {
@@ -607,6 +653,9 @@ public class ZeljeznickaStanicaController implements Initializable {
     private void postaviKoloneZaTabeluVozova(ObservableList zaposleni) {
 
         // ovo da ubaci u tabelu mozda probati realizovati kao triger
+        vozIDColumn = new TableColumn<>("Voz ID");
+        vozIDColumn.setCellValueFactory(new PropertyValueFactory<>("vozId"));
+
         vozNazivColumn = new TableColumn("Naziv");
         vozNazivColumn.setCellValueFactory(new PropertyValueFactory<>("naziv"));
 
@@ -622,7 +671,7 @@ public class ZeljeznickaStanicaController implements Initializable {
         sirinaKolosjeka = new TableColumn("Sirina kolosjeka [mm]");
         sirinaKolosjeka.setCellValueFactory(new PropertyValueFactory<>("sirinaKolosjeka"));
 
-        univerzalnaTabelaTableView.getColumns().addAll(vozNazivColumn, vozIdColumn, vrstaPogonaColumn, namjenaColumn, sirinaKolosjeka);
+        univerzalnaTabelaTableView.getColumns().addAll(vozIDColumn, vozNazivColumn, vozIdColumn, vrstaPogonaColumn, namjenaColumn, sirinaKolosjeka);
 
     }
 
@@ -659,6 +708,7 @@ public class ZeljeznickaStanicaController implements Initializable {
         restoranColumn = new TableColumn("Restoran");
         restoranColumn.setCellValueFactory(new PropertyValueFactory<>("restoran"));
 
+        univerzalnaTabelaTableView.getItems().forEach((x -> ((PutnickiVagon) x).isLezajZaSpavanje()));
         univerzalnaTabelaTableView.getColumns().addAll(vagonIDColumn, brojMjestaColumn, lezajZaSpavanjeColumn, toaletColumn, barColumn, klimaColumn, tvColumn, internetColumn, restoranColumn);
 
     }
