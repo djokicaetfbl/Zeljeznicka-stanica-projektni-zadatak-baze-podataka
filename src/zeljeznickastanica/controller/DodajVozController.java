@@ -90,6 +90,11 @@ public class DodajVozController implements Initializable {
             }
             String sirinaKolosjekaRegex = "^[0-9]+([,.][0-9][0-9]?)?$";
 
+            if (tfSirinaKolosjeka.getText().length() > 6) {
+                upozorenjeSirinaKolosjeka();
+                return false;
+            }
+
             Pattern pattern = Pattern.compile(sirinaKolosjekaRegex);
             if (!pattern.matcher(tfSirinaKolosjeka.getText()).matches() || Double.parseDouble(tfSirinaKolosjeka.getText()) < 0) {
                 upozorenjeSirinaKolosjeka();
@@ -101,7 +106,7 @@ public class DodajVozController implements Initializable {
                 String tipVoza = cmbTipVoza.getValue().toString();
                 Double sirinaKolosjeka = Double.parseDouble(tfSirinaKolosjeka.getText());
                 if (!ZeljeznickaStanicaController.booleanDodajVoz) {
-                    System.out.println("usaoo");
+                    //System.out.println("usaoo");
                     lokomotiva = (Lokomotiva) ZeljeznickaStanicaController.izabraniVoz;
                 }
 
@@ -117,7 +122,7 @@ public class DodajVozController implements Initializable {
                 } else {
                     // VozDAO.izmjeniVoz(voz);
                     //MjestaController.booleanDodaj = false;
-                    System.out.println("IZMJENA");
+                    //System.out.println("IZMJENA");
                     LokomotivaDAO.izmjeniLokomotivu(lokomotiva);
                     ZeljeznickaStanicaController.booleanDodajVoz = false;
                 }
